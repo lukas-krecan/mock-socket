@@ -18,11 +18,12 @@ package net.javacrumbs.mocksocket;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketImpl;
 
-public abstract class AbstractMockSocket extends SocketImpl {
+public abstract class AbstractMockSocketImpl extends SocketImpl {
 	
 	/**
 	 * Onvoked on a connect method call.
@@ -47,7 +48,7 @@ public abstract class AbstractMockSocket extends SocketImpl {
 
 	@Override
 	protected void connect(String host, int port) throws IOException {
-		onConnect(address+":"+port);
+		onConnect(host+":"+port);
 	}
 
 	
@@ -59,7 +60,15 @@ public abstract class AbstractMockSocket extends SocketImpl {
 
 	@Override
 	protected void connect(SocketAddress address, int timeout) throws IOException {
-		onConnect(address.toString());
+		if (address instanceof InetSocketAddress)
+		{
+			InetSocketAddress inetSocketAddress = (InetSocketAddress) address;
+			connect(inetSocketAddress.getHostName(), inetSocketAddress.getPort());
+		}
+		else
+		{
+			onConnect(address.toString());
+		}
 	}
 
 	@Override
