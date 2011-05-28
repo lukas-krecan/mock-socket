@@ -43,7 +43,6 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		this.address = address;
 	}
 
-	@Override
 	public InputStream getInputStream() throws IOException {
 		byte[] request = getOutputStream().toByteArray();
 		for (MatcherWithData matcher : matchers) {
@@ -55,14 +54,12 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		throw new AssertionError("No matcher matches request "+Arrays.toString(request)+" for address \""+address+"\". Do not know which response to return.");
 	}
 
-	@Override
 	public MatcherBasedMockRecorder thenReturn(byte[] data) {
 		matchers.get(matchers.size()-1).addData(data);
 		return this;
 	}
 
 
-	@Override
 	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
 		matchers.add(new MatcherWithData(matcher));
 		return this;

@@ -40,7 +40,6 @@ public class StaticConnectionFactory implements ConnectionFactory {
 		}
 	}
 	
-	@Override
 	public synchronized Connection createConnection(String address) {
 		UniversalMockConnection connection = expectedConnections.get(address);
 		if (connection==null)

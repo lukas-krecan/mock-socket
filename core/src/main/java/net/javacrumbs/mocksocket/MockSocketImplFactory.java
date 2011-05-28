@@ -26,7 +26,6 @@ public class MockSocketImplFactory implements SocketImplFactory {
 		this.mockSocket = mockSocket;
 	}
 
-	@Override
 	public SocketImpl createSocketImpl() {
 		return mockSocket;
 	}

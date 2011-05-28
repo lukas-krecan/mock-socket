@@ -20,18 +20,22 @@ import org.eclipse.jetty.testing.HttpTester;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public class ContentMatcher extends AbstractHttpMatcher {
+public class HeaderMatcher extends AbstractHttpMatcher {
+	
+	private final String header;
 
-	public ContentMatcher(Matcher<?> wrappedMatcher, String encoding) {
-		super(wrappedMatcher, encoding);
+	public HeaderMatcher(String header, Matcher<String> headerMatcher, String encoding) {
+		super(headerMatcher, encoding);
+		this.header = header;
 	}
+
 	@Override
 	protected Object getValue(HttpTester httpTester) {
-		return httpTester.getContent();
+		return httpTester.getHeader(header);
+	}
+	
+	public void describeTo(Description description) {
+		description.appendText("header "+header+" ").appendDescriptionOf(getWrappedMatcher());
 	}
 
-	@Override
-	public void describeTo(Description description) {
-		description.appendText("content ").appendDescriptionOf(getWrappedMatcher());
-	}
 }

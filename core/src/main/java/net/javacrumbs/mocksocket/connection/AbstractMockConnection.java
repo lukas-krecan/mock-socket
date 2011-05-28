@@ -43,12 +43,10 @@ public abstract class AbstractMockConnection implements MockConnection{
 		requestData.add(new ByteArrayOutputStream());
 	}
 
-	@Override
 	public ByteArrayOutputStream getOutputStream() throws IOException {
 		return requestData.get(actualConnection);
 	}
 	
-	@Override
 	public int numberOfRequests() {
 		return requestData.size();
 	}

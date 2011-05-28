@@ -41,7 +41,6 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		this.address = address;
 	}
 
-	@Override
 	public SequentialMockRecorder andReturn(byte[] data) {
 		SequentialMockConnection connection = new SequentialMockConnection(address);
 		wrappedConnection = connection;
@@ -49,7 +48,6 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return connection;
 	}
 
-	@Override
 	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
 		MatcherBasedMockConnection connection = new MatcherBasedMockConnection(address);
 		connection.andWhenPayload(matcher);
@@ -69,7 +67,6 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.getOutputStream();
 	}
 
-	@Override
 	public byte[] requestData(int i) {
 		return wrappedConnection.requestData(i);
 	}

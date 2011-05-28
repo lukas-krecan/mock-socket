@@ -20,20 +20,19 @@ import org.eclipse.jetty.testing.HttpTester;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public class ContentTypeMatcher extends AbstractHttpMatcher {
+public class StatusMatcher extends AbstractHttpMatcher {
 
-	public ContentTypeMatcher(Matcher<?> wrappedMatcher, String encoding) {
-		super(wrappedMatcher, encoding);
-	}
-
-	@Override
-	protected Object getValue(HttpTester httpTester) {
-		return httpTester.getContentType();
-	}
-
-	@Override
-	public void describeTo(Description description) {
-		description.appendText("contentType ").appendDescriptionOf(getWrappedMatcher());
+	public StatusMatcher(Matcher<Integer> statusMatcher, String encoding) {
+		super(statusMatcher, encoding);
 	}
 	
+	@Override
+	protected Object getValue(HttpTester httpTester) {
+		return httpTester.getStatus();
+	}
+
+	
+	public void describeTo(Description description) {
+		description.appendText("status ").appendDescriptionOf(getWrappedMatcher());
+	}
 }

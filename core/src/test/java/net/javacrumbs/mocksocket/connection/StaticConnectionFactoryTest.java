@@ -161,8 +161,7 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testUnexpectedMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1)
-		.andWhenPayload(is(DATA4)).thenReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
 		connection.getOutputStream().write(DATA4);
@@ -173,7 +172,7 @@ public class StaticConnectionFactoryTest {
 		}
 		catch(AssertionError e)
 		{
-			assertEquals("No more connections expected for \"localhost:1111\" and request matching matcher: is [<4>, <4>, <4>, <4>].", e.getMessage());
+			assertTrue(e.getMessage().startsWith("No more connections expected for \"localhost:1111\" and request matching matcher: "));
 		}
 	}
 	

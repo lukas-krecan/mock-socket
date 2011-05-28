@@ -31,12 +31,10 @@ public abstract class AbstractMockSocketImpl extends SocketImpl {
 	 */
 	protected abstract void onConnect(String address);
 	
-	@Override
 	public void setOption(int optID, Object value) throws SocketException {
 		
 	}
 
-	@Override
 	public Object getOption(int optID) throws SocketException {
 		return null;
 	}

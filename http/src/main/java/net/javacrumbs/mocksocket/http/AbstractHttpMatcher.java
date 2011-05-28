@@ -34,7 +34,6 @@ public abstract class AbstractHttpMatcher extends BaseMatcher<String> {
 		this.encoding = encoding;
 	}
 
-	@Override
 	public boolean matches(Object item) {
 		if (item instanceof String) {
 			return doMatch(getHttpTester((String) item));

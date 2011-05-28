@@ -42,7 +42,6 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		return this;
 	}
 	
-	@Override
 	public InputStream getInputStream() throws IOException {
 		if (responseData.size()>actualConnection)
 		{
