@@ -24,10 +24,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.util.Arrays;
-
-import net.javacrumbs.mocksocket.connection.Connection;
-import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 
 import org.junit.After;
 import org.junit.Test;
