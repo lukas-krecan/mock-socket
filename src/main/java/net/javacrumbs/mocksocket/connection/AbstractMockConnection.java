@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.Matcher;
+
 
 /**
  * Common code for MockConnections.
@@ -45,6 +47,11 @@ public abstract class AbstractMockConnection implements MockConnection{
 	public ByteArrayOutputStream getOutputStream() throws IOException {
 		return requestData.get(actualConnection);
 	}
+	
+	@Override
+	public int numberOfRequests() {
+		return requestData.size();
+	}
 
 	public byte[] requestData(int i) {
 		return requestData.get(i).toByteArray();
@@ -56,6 +63,16 @@ public abstract class AbstractMockConnection implements MockConnection{
 
 	protected void setActualConnection(int actualConnection) {
 		this.actualConnection = actualConnection;
+	}
+	
+	public boolean containsRequestThat(Matcher<byte[]> matcher){
+		for (ByteArrayOutputStream data : requestData) {
+			if (matcher.matches(data.toByteArray()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

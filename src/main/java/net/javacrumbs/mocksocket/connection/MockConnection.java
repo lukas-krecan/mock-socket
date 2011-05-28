@@ -16,8 +16,14 @@
 
 package net.javacrumbs.mocksocket.connection;
 
+import org.hamcrest.Matcher;
+
 public interface MockConnection extends Connection {
 	public void onCreate();
 
 	public byte[] requestData(int i);
+	
+	public int numberOfRequests();
+	
+	public boolean containsRequestThat(Matcher<byte[]> matcher);
 }

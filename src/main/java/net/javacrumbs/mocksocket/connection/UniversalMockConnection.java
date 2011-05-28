@@ -74,7 +74,11 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.requestData(i);
 	}
 
+	public int numberOfRequests() {
+		return wrappedConnection.numberOfRequests();
+	}
 
-	
-
+	public boolean containsRequestThat(Matcher<byte[]> matcher) {
+		return wrappedConnection.containsRequestThat(matcher);
+	}
 }

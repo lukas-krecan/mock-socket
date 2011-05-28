@@ -19,8 +19,10 @@ package net.javacrumbs.mocksocket.connection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -54,7 +56,9 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
 		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
-		
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).numberOfRequests(), is(1));
+		assertTrue(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA4)));
+		assertFalse(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA3)));
 	}
 	
 	@Test(expected=IllegalStateException.class)
