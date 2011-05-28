@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.connection;
+package net.javacrumbs.mocksocket.connection.matcher;
 
-public interface MockConnection extends Connection {
-	public void onCreate();
+import org.hamcrest.Matcher;
 
-	public byte[] requestData(int i);
+public interface MatcherBasedMockRecorder {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher);
+	
+	MatcherBasedMockRecorder thenReturn(byte[] data);
 }

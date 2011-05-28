@@ -18,10 +18,16 @@ package net.javacrumbs.mocksocket.connection;
 
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Arrays;
+
+import net.javacrumbs.mocksocket.connection.Connection;
+import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 
 import org.junit.After;
 import org.junit.Test;
@@ -52,8 +58,9 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
 		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
-	
+		
 	}
+	
 	@Test(expected=IllegalStateException.class)
 	public void testUnknown() throws IOException
 	{
@@ -87,7 +94,88 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2);
 		checkConnection(ADDRESS2,DATA4);
 	}
+	@Test
+	public void testMoreRequests() throws IOException
+	{
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
+		
+		checkConnection(ADDRESS1,DATA1);
+		Connection connection = connectionFactory.createConnection(ADDRESS1);
+		try
+		{
+			connection.getInputStream();
+			fail();
+		}
+		catch(AssertionError e)
+		{
+			assertThat(e.getMessage(), is("No more connections expected to \"localhost:1111\"."));
+		}
+	}
 
+	
+	@Test
+	public void testWithPayload() throws IOException
+	{
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
+			.andWhenPayload(is(DATA4)).thenReturn(DATA1)
+			.andWhenPayload(is(DATA3)).thenReturn(DATA2);
+		
+		checkConnection(ADDRESS1,DATA1, DATA4);
+		checkConnection(ADDRESS1,DATA2, DATA3);
+		
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
+	
+	}
+	@Test
+	public void testWithPayloadMultiple() throws IOException
+	{
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
+			.andWhenPayload(is(DATA4)).thenReturn(DATA1).thenReturn(DATA3)
+			.andWhenPayload(is(DATA3)).thenReturn(DATA2);
+		
+		checkConnection(ADDRESS1,DATA1, DATA4);
+		checkConnection(ADDRESS1,DATA2, DATA3);
+		checkConnection(ADDRESS1,DATA3, DATA4);
+		
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
+		
+	}
+	@Test
+	public void testUnexpected() throws IOException
+	{
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
+			.andWhenPayload(is(DATA4)).thenReturn(DATA1);
+		checkConnection(ADDRESS1,DATA1, DATA4);
+		Connection connection = connectionFactory.createConnection(ADDRESS1);
+		connection.getOutputStream().write(DATA3);
+		try
+		{
+			connection.getInputStream();
+			fail();
+		}
+		catch(AssertionError e)
+		{
+			assertEquals("No matcher matches request [3, 3, 3, 3] for address \"localhost:1111\". Do not know which response to return.", e.getMessage());
+		}
+	}
+	@Test
+	public void testUnexpectedMultiple() throws IOException
+	{
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
+		.andWhenPayload(is(DATA4)).thenReturn(DATA1);
+		checkConnection(ADDRESS1,DATA1, DATA4);
+		Connection connection = connectionFactory.createConnection(ADDRESS1);
+		connection.getOutputStream().write(DATA4);
+		try
+		{
+			connection.getInputStream();
+			fail();
+		}
+		catch(AssertionError e)
+		{
+			assertEquals("No more connections expected for \"localhost:1111\" and request matching matcher: is [<4>, <4>, <4>, <4>].", e.getMessage());
+		}
+	}
 	
 	private void checkConnection(String address, byte[] outData) throws IOException {
 		checkConnection(address, outData, null);

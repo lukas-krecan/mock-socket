@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.connection;
+package net.javacrumbs.mocksocket.connection.matcher;
 
-public interface MockConnection extends Connection {
-	public void onCreate();
+public interface MatcherBasedMockResultRecorder {
 
-	public byte[] requestData(int i);
+	MatcherBasedMockRecorder thenReturn(byte[] data);
+
 }

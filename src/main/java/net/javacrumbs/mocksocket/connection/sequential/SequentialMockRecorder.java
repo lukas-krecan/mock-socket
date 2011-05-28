@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.connection;
+package net.javacrumbs.mocksocket.connection.sequential;
 
-public interface MockConnection extends Connection {
-	public void onCreate();
-
-	public byte[] requestData(int i);
+/**
+ * Records calls in sequence.
+ * @author Lukas Krecan
+ *
+ */
+public interface SequentialMockRecorder {
+	public SequentialMockRecorder andReturn(byte[] data);
 }

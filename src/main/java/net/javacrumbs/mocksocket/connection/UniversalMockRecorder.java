@@ -16,8 +16,18 @@
 
 package net.javacrumbs.mocksocket.connection;
 
-public interface MockConnection extends Connection {
-	public void onCreate();
+import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
+import net.javacrumbs.mocksocket.connection.sequential.SequentialMockRecorder;
 
-	public byte[] requestData(int i);
+import org.hamcrest.Matcher;
+
+/**
+ * Can record both sequential nad matcher based mocks;
+ * @author Lukas Krecan
+ *
+ */
+public interface UniversalMockRecorder {
+	public SequentialMockRecorder andReturn(byte[] data);
+	
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher);
 }

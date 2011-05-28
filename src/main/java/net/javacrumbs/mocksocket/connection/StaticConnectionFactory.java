@@ -29,7 +29,7 @@ import net.javacrumbs.mocksocket.MockSocketImplFactory;
  *
  */
 public class StaticConnectionFactory implements ConnectionFactory {
-	private static final Map<String, MockConnection> expectedConnections = new HashMap<String, MockConnection>();
+	private static final Map<String, UniversalMockConnection> expectedConnections = new HashMap<String, UniversalMockConnection>();
 	
 	public static void bootstrap()
 	{
@@ -42,7 +42,7 @@ public class StaticConnectionFactory implements ConnectionFactory {
 	
 	@Override
 	public synchronized Connection createConnection(String address) {
-		MockConnection connection = expectedConnections.get(address);
+		UniversalMockConnection connection = expectedConnections.get(address);
 		if (connection==null)
 		{
 			throw new IllegalStateException("Connection to address \""+address+"\" not expected.");
@@ -51,8 +51,8 @@ public class StaticConnectionFactory implements ConnectionFactory {
 		return connection;
 	}
 
-	public synchronized static MockConnection expectCallTo(String address) {
-		MockConnection mockConnection = new MockConnection();
+	public synchronized static UniversalMockRecorder expectCallTo(String address) {
+		UniversalMockConnection mockConnection = new UniversalMockConnection(address);
 		if (connection(address)==null)
 		{
 			expectedConnections.put(address, mockConnection);
