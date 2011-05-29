@@ -18,7 +18,6 @@ package net.javacrumbs.mocksocket.connection;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -54,10 +53,10 @@ public class StaticConnectionFactoryTest {
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).numberOfRequests(), is(1));
-		assertTrue(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA4)));
-		assertFalse(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA3)));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().size(), is(1));
+//		assertTrue(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA4)));
+//		assertFalse(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA3)));
 	}
 	
 	@Test(expected=IllegalStateException.class)
@@ -73,8 +72,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA3));
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(1), is(DATA4));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA3));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(1), is(DATA4));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
@@ -122,7 +121,7 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA4));
 	
 	}
 	@Test
@@ -136,7 +135,7 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA3, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData(0), is(DATA4));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA4));
 		
 	}
 	@Test

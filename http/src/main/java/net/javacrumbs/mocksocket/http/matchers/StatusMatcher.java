@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.mocksocket.connection;
+package net.javacrumbs.mocksocket.http.matchers;
 
-import java.util.List;
+import net.javacrumbs.mocksocket.http.HttpProcessor;
 
-public interface MockConnection extends Connection {
-	public void onCreate();
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
-	public List<byte[]> requestData();
+public class StatusMatcher <T> extends AbstractHttpMatcher <T> {
+
+	public StatusMatcher(Matcher<Integer> wrappedMatcher, String encoding) {
+		super(wrappedMatcher, encoding);
+	}
 	
+	@Override
+	protected Object getValue(HttpProcessor httpProcessor) {
+		return httpProcessor.getStatus();
+	}
+
+	
+	public void describeTo(Description description) {
+		description.appendText("status ").appendDescriptionOf(getWrappedMatcher());
+	}
 }

@@ -21,6 +21,7 @@ import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
 import net.javacrumbs.mocksocket.http.matchers.StatusMatcher;
 
 import org.hamcrest.Matcher;
+import org.hamcrest.core.CombinableMatcher;
 
 public class HttpMatchers {
 	
@@ -30,22 +31,21 @@ public class HttpMatchers {
 	{
 	}
 	
-	public static <T> Matcher<T> status(Matcher<Integer> statusMatcher) {
-		return new StatusMatcher<T>(statusMatcher, encoding);
+	public static CombinableMatcher<byte[]> status(Matcher<Integer> statusMatcher) {
+		return new CombinableMatcher<byte[]>(new StatusMatcher<byte[]>(statusMatcher, encoding));
 	}
 
-	public static <T> Matcher<T> header(String header, Matcher<String> headerMatcher) {
-		return new HeaderMatcher<T>(header, headerMatcher, encoding);
+	public static CombinableMatcher<byte[]> header(String header, Matcher<String> headerMatcher) {
+		return new CombinableMatcher<byte[]>(new HeaderMatcher<byte[]>(header, headerMatcher, encoding));
 	}
 	
-	public static <T> Matcher<T> content(Matcher<String> contentMatcher) {
-		return new ContentMatcher<T>(contentMatcher, encoding);
+	public static CombinableMatcher<byte[]> content(Matcher<String> contentMatcher) {
+		return new CombinableMatcher<byte[]>(new ContentMatcher<byte[]>(contentMatcher, encoding));
 	}
 
-	public static <T> Matcher<T> method(Matcher<String> methodMatcher) {
-		return new MethodMatcher<T>(methodMatcher, encoding);
+	public static CombinableMatcher<byte[]> method(Matcher<String> methodMatcher) {
+		return new CombinableMatcher<byte[]>(new MethodMatcher<byte[]>(methodMatcher, encoding));
 	}
-
 
 	public static synchronized String getEncoding() {
 		return encoding;

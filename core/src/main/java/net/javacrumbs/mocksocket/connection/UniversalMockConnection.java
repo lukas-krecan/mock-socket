@@ -18,6 +18,7 @@ package net.javacrumbs.mocksocket.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
@@ -47,7 +48,7 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return connection;
 	}
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<? extends Object> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
 		MatcherBasedMockConnection connection = new MatcherBasedMockConnection(address);
 		connection.andWhenPayload(matcher);
 		wrappedConnection = connection;
@@ -66,15 +67,8 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.getOutputStream();
 	}
 
-	public byte[] requestData(int i) {
-		return wrappedConnection.requestData(i);
+	public List<byte[]> requestData() {
+		return wrappedConnection.requestData();
 	}
 
-	public int numberOfRequests() {
-		return wrappedConnection.numberOfRequests();
-	}
-
-	public boolean containsRequestThat(Matcher<? extends Object> matcher) {
-		return wrappedConnection.containsRequestThat(matcher);
-	}
 }

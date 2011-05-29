@@ -53,7 +53,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	}
 
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<? extends Object> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
 		matchers.add(new MatcherWithData(matcher));
 		return this;
 	}
@@ -97,11 +97,11 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	
 	class MatcherWithData
 	{
-		private final Matcher<? extends Object> matcher;
+		private final Matcher<byte[]> matcher;
 		private final List<byte[]> responseData = new ArrayList<byte[]>();
 		private int actualResponse = 0;		
 		
-		public MatcherWithData(Matcher<? extends Object> matcher) {
+		public MatcherWithData(Matcher<byte[]> matcher) {
 			this.matcher = matcher;
 		}
 		
