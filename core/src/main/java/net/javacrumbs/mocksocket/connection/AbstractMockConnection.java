@@ -62,7 +62,7 @@ public abstract class AbstractMockConnection implements MockConnection{
 		this.actualConnection = actualConnection;
 	}
 	
-	public boolean containsRequestThat(Matcher<byte[]> matcher){
+	public boolean containsRequestThat(Matcher<? extends Object> matcher){
 		for (ByteArrayOutputStream data : requestData) {
 			if (matcher.matches(data.toByteArray()))
 			{

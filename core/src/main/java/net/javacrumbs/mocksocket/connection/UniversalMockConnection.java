@@ -47,7 +47,7 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return connection;
 	}
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<? extends Object> matcher) {
 		MatcherBasedMockConnection connection = new MatcherBasedMockConnection(address);
 		connection.andWhenPayload(matcher);
 		wrappedConnection = connection;
@@ -74,7 +74,7 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.numberOfRequests();
 	}
 
-	public boolean containsRequestThat(Matcher<byte[]> matcher) {
+	public boolean containsRequestThat(Matcher<? extends Object> matcher) {
 		return wrappedConnection.containsRequestThat(matcher);
 	}
 }

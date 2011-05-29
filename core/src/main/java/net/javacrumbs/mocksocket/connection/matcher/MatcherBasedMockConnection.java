@@ -16,6 +16,7 @@
 package net.javacrumbs.mocksocket.connection.matcher;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,14 +44,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	}
 
 	public InputStream getInputStream() throws IOException {
-		byte[] request = getOutputStream().toByteArray();
-		for (MatcherWithData matcher : matchers) {
-			if (matcher.getMatcher().matches(request))
-			{
-				return matcher.getResponse();
-			}
-		}
-		throw new AssertionError("No matcher matches request "+Arrays.toString(request)+" for address \""+address+"\". Do not know which response to return.");
+		return new RedirectingInputStream(getOutputStream());
 	}
 
 	public MatcherBasedMockRecorder thenReturn(byte[] data) {
@@ -59,18 +53,55 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	}
 
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<? extends Object> matcher) {
 		matchers.add(new MatcherWithData(matcher));
 		return this;
 	}
 	
+	/**
+	 * Input stream that redirects to actual InputStread based on OutputStreamData. Has to be done this way since InputStram could be created before
+	 * OutputStream data are written.
+	 * @author Lukas Krecan
+	 *
+	 */
+	class RedirectingInputStream extends InputStream
+	{
+		private final ByteArrayOutputStream outputStream;
+		private InputStream wrappedInputStream;
+		
+		public RedirectingInputStream(ByteArrayOutputStream outputStream)
+		{
+			this.outputStream = outputStream;
+		}
+
+		@Override
+		public int read() throws IOException {
+			if (wrappedInputStream==null)
+			{
+				wrappedInputStream = findInputStream();
+			}
+			return wrappedInputStream.read();
+		}
+
+		private InputStream findInputStream() throws IOException, AssertionError {
+			byte[] request = outputStream.toByteArray();
+			for (MatcherWithData matcher : matchers) {
+				if (matcher.getMatcher().matches(request))
+				{
+					return matcher.getResponse();
+				}
+			}
+			throw new AssertionError("No matcher matches request "+Arrays.toString(request)+" for address \""+address+"\". Do not know which response to return.");
+		}
+	}
+	
 	class MatcherWithData
 	{
-		private final Matcher<byte[]> matcher;
+		private final Matcher<? extends Object> matcher;
 		private final List<byte[]> responseData = new ArrayList<byte[]>();
 		private int actualResponse = 0;		
 		
-		public MatcherWithData(Matcher<byte[]> matcher) {
+		public MatcherWithData(Matcher<? extends Object> matcher) {
 			this.matcher = matcher;
 		}
 		
@@ -90,7 +121,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			responseData.add(data);
 		}
 		
-		public Matcher<byte[]> getMatcher() {
+		public Matcher<? extends Object> getMatcher() {
 			return matcher;
 		}
 		

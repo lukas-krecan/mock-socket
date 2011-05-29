@@ -16,7 +16,7 @@
 package net.javacrumbs.mocksocket.http;
 
 import static net.javacrumbs.mocksocket.http.HttpMatchers.content;
-import static net.javacrumbs.mocksocket.http.HttpMatchers.hasStatus;
+import static net.javacrumbs.mocksocket.http.HttpMatchers.status;
 import static net.javacrumbs.mocksocket.http.HttpMatchers.header;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,12 +30,12 @@ public class HttpMatchersTest {
 	@Test
 	public void testMatchStatus()
 	{
-		assertThat(REQUEST, hasStatus(200));
+		assertThat(REQUEST, status(is(200)));
 	}
 	@Test(expected=AssertionError.class)
 	public void testDoNotMatchStatus()
 	{
-		assertThat(REQUEST, hasStatus(300));
+		assertThat(REQUEST, status(is(300)));
 	}
 	@Test
 	public void testMatchHeader()

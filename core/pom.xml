@@ -18,27 +18,23 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-api</artifactId>
 			<version>1.0</version>
-			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1.1</version>
-			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.8.5</version>
-			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>3.0.5.RELEASE</version>
-			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

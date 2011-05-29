@@ -24,5 +24,5 @@ public interface MockConnection extends Connection {
 	
 	public int numberOfRequests();
 	
-	public boolean containsRequestThat(Matcher<byte[]> matcher);
+	public boolean containsRequestThat(Matcher<? extends Object> matcher);
 }

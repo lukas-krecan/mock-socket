@@ -24,5 +24,18 @@
 		    <artifactId>hamcrest-core</artifactId>
 		    <version>1.2.1</version>
 		</dependency>
+		<dependency>
+		    <groupId>net.javacrumbs</groupId>
+			<artifactId>mock-socket-core</artifactId>
+			<version>0.2-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1.1</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

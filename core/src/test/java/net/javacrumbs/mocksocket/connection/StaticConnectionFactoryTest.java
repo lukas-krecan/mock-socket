@@ -149,8 +149,8 @@ public class StaticConnectionFactoryTest {
 		connection.getOutputStream().write(DATA3);
 		try
 		{
-			connection.getInputStream();
-			fail();
+			connection.getInputStream().read();
+			fail("Exception expected");
 		}
 		catch(AssertionError e)
 		{
@@ -166,8 +166,8 @@ public class StaticConnectionFactoryTest {
 		connection.getOutputStream().write(DATA4);
 		try
 		{
-			connection.getInputStream();
-			fail();
+			connection.getInputStream().read();
+			fail("Exception expected");
 		}
 		catch(AssertionError e)
 		{

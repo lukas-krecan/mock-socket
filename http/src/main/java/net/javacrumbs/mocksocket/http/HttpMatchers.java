@@ -15,7 +15,11 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import org.hamcrest.CoreMatchers;
+import net.javacrumbs.mocksocket.http.matchers.ContentMatcher;
+import net.javacrumbs.mocksocket.http.matchers.HeaderMatcher;
+import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
+import net.javacrumbs.mocksocket.http.matchers.StatusMatcher;
+
 import org.hamcrest.Matcher;
 
 public class HttpMatchers {
@@ -25,22 +29,21 @@ public class HttpMatchers {
 	private HttpMatchers()
 	{
 	}
-		
-
-	public static Matcher<String> hasStatus(int status) {
-		return new StatusMatcher(CoreMatchers.is(status), encoding);
-	}
 	
-	public static Matcher<String> hasStatus(Matcher<Integer> statusMatcher) {
-		return new StatusMatcher(statusMatcher, encoding);
+	public static <T> Matcher<T> status(Matcher<Integer> statusMatcher) {
+		return new StatusMatcher<T>(statusMatcher, encoding);
 	}
 
-	public static Matcher<String> header(String header, Matcher<String> headerMatcher) {
-		return new HeaderMatcher(header, headerMatcher, encoding);
+	public static <T> Matcher<T> header(String header, Matcher<String> headerMatcher) {
+		return new HeaderMatcher<T>(header, headerMatcher, encoding);
 	}
 	
-	public static Matcher<String> content(Matcher<String> contentMatcher) {
-		return new ContentMatcher(contentMatcher, encoding);
+	public static <T> Matcher<T> content(Matcher<String> contentMatcher) {
+		return new ContentMatcher<T>(contentMatcher, encoding);
+	}
+
+	public static <T> Matcher<T> method(Matcher<String> methodMatcher) {
+		return new MethodMatcher<T>(methodMatcher, encoding);
 	}
 
 

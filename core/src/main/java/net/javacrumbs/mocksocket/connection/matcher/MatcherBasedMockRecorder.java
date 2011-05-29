@@ -18,7 +18,7 @@ package net.javacrumbs.mocksocket.connection.matcher;
 import org.hamcrest.Matcher;
 
 public interface MatcherBasedMockRecorder {
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher);
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<? extends Object> matcher);
 	
 	MatcherBasedMockRecorder thenReturn(byte[] data);
 }
