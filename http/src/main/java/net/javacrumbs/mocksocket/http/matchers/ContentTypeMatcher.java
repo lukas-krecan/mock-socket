@@ -15,20 +15,20 @@
  */
 package net.javacrumbs.mocksocket.http.matchers;
 
-import net.javacrumbs.mocksocket.http.HttpProcessor;
+import net.javacrumbs.mocksocket.http.HttpParser;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 public class ContentTypeMatcher  extends AbstractHttpMatcher {
 
-	public ContentTypeMatcher(Matcher<String> wrappedMatcher, String encoding) {
-		super(wrappedMatcher, encoding);
+	public ContentTypeMatcher(Matcher<String> wrappedMatcher) {
+		super(wrappedMatcher);
 	}
 
 	@Override
-	protected Object getValue(HttpProcessor httpProcessor) {
-		return httpProcessor.getContentType();
+	protected Object getValue(HttpParser httpParser) {
+		return httpParser.getContentType();
 	}
 
 	public void describeTo(Description description) {

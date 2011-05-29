@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
-import net.javacrumbs.mocksocket.connection.HttpData;
 import net.javacrumbs.mocksocket.connection.MockConnection;
+import net.javacrumbs.mocksocket.connection.SocketData;
 
 import org.hamcrest.Matcher;
 
@@ -47,13 +47,13 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		return new RedirectingInputStream(getOutputStream());
 	}
 
-	public MatcherBasedMockRecorder thenReturn(HttpData data) {
+	public MatcherBasedMockRecorder thenReturn(SocketData data) {
 		matchers.get(matchers.size()-1).addData(data);
 		return this;
 	}
 
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<HttpData> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
 		matchers.add(new MatcherWithData(matcher));
 		return this;
 	}
@@ -84,7 +84,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		}
 
 		private InputStream findInputStream() throws IOException, AssertionError {
-			HttpData request = new HttpData(outputStream.toByteArray());
+			SocketData request = createSocketData(outputStream.toByteArray());
 			for (MatcherWithData matcher : matchers) {
 				if (matcher.getMatcher().matches(request))
 				{
@@ -95,13 +95,13 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		}
 	}
 	
-	class MatcherWithData
+	protected class MatcherWithData
 	{
-		private final Matcher<HttpData> matcher;
-		private final List<HttpData> responseData = new ArrayList<HttpData>();
+		private final Matcher<SocketData> matcher;
+		private final List<SocketData> responseData = new ArrayList<SocketData>();
 		private int actualResponse = 0;		
 		
-		public MatcherWithData(Matcher<HttpData> matcher) {
+		public MatcherWithData(Matcher<SocketData> matcher) {
 			this.matcher = matcher;
 		}
 		
@@ -116,7 +116,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			}
 		}
 
-		public void addData(HttpData data)
+		public void addData(SocketData data)
 		{
 			responseData.add(data);
 		}

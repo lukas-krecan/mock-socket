@@ -26,7 +26,7 @@ import org.hamcrest.Matcher;
  *
  */
 public interface UniversalMockRecorder {
-	public SequentialMockRecorder andReturn(HttpData data);
+	public SequentialMockRecorder andReturn(SocketData data);
 	
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<HttpData> matcher);
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher);
 }

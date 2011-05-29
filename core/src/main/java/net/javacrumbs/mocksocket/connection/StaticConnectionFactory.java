@@ -53,13 +53,17 @@ public class StaticConnectionFactory implements ConnectionFactory {
 		UniversalMockConnection mockConnection = new UniversalMockConnection(address);
 		if (connection(address)==null)
 		{
-			expectedConnections.put(address, mockConnection);
+			addExpectedConnection(address, mockConnection);
 		}
 		else
 		{
 			throw new IllegalArgumentException("Can not call expect twice with the same address. You have to call reset before each test. If you need simulate multiple requests to the same address, please call andReturn several times.");
 		}
 		return mockConnection;
+	}
+
+	protected static void addExpectedConnection(String address, UniversalMockConnection mockConnection) {
+		expectedConnections.put(address, mockConnection);
 	}
 	
 	public synchronized static void reset()

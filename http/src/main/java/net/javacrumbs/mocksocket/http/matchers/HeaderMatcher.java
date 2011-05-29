@@ -15,7 +15,7 @@
  */
 package net.javacrumbs.mocksocket.http.matchers;
 
-import net.javacrumbs.mocksocket.http.HttpProcessor;
+import net.javacrumbs.mocksocket.http.HttpParser;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -24,14 +24,14 @@ public class HeaderMatcher  extends AbstractHttpMatcher  {
 	
 	private final String header;
 
-	public HeaderMatcher(String header, Matcher<String> wrappedMatcher, String encoding) {
-		super(wrappedMatcher, encoding);
+	public HeaderMatcher(String header, Matcher<String> wrappedMatcher) {
+		super(wrappedMatcher);
 		this.header = header;
 	}
 
 	@Override
-	protected Object getValue(HttpProcessor httpProcessor) {
-		return httpProcessor.getHeader(header);
+	protected Object getValue(HttpParser httpParser) {
+		return httpParser.getHeader(header);
 	}
 	
 	public void describeTo(Description description) {

@@ -15,7 +15,7 @@
  */
 package net.javacrumbs.mocksocket.connection.sequential;
 
-import net.javacrumbs.mocksocket.connection.HttpData;
+import net.javacrumbs.mocksocket.connection.SocketData;
 
 /**
  * Records calls in sequence.
@@ -23,5 +23,5 @@ import net.javacrumbs.mocksocket.connection.HttpData;
  *
  */
 public interface SequentialMockRecorder {
-	public SequentialMockRecorder andReturn(HttpData data);
+	public SequentialMockRecorder andReturn(SocketData data);
 }

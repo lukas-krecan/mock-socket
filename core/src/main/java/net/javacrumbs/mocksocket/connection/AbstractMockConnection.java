@@ -33,10 +33,6 @@ public abstract class AbstractMockConnection implements MockConnection{
 	private final List<ByteArrayOutputStream> requestData = new ArrayList<ByteArrayOutputStream>();
 	protected int actualConnection = -1;
 
-	public AbstractMockConnection() {
-		super();
-	}
-
 	public void onCreate() {
 		actualConnection++;
 		requestData.add(new ByteArrayOutputStream());
@@ -46,12 +42,16 @@ public abstract class AbstractMockConnection implements MockConnection{
 		return requestData.get(actualConnection);
 	}
 	
-	public List<HttpData> requestData() {
-		List<HttpData> result = new ArrayList<HttpData>();
+	public List<SocketData> requestData() {
+		List<SocketData> result = new ArrayList<SocketData>();
 		for (ByteArrayOutputStream data : requestData) {
-			result.add(new HttpData(data.toByteArray()));
+			result.add(createSocketData(data.toByteArray()));
 		}
 		return result;
+	}
+
+	protected SocketData createSocketData(byte[] data) {
+		return new SocketData(data);
 	}
 
 	protected int getActualConnection() {

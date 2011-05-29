@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
-import net.javacrumbs.mocksocket.connection.HttpData;
 import net.javacrumbs.mocksocket.connection.MockConnection;
+import net.javacrumbs.mocksocket.connection.SocketData;
 
 /**
  * Mock connection. Can simulate multiple requests to the same address.
@@ -31,13 +31,13 @@ import net.javacrumbs.mocksocket.connection.MockConnection;
  *
  */
 public class SequentialMockConnection extends AbstractMockConnection implements MockConnection, SequentialMockRecorder{
-	private final List<HttpData> responseData = new ArrayList<HttpData>();
+	private final List<SocketData> responseData = new ArrayList<SocketData>();
 	private final String address;
 	public SequentialMockConnection(String address) {
 		this.address = address;
 	}
 
-	public SequentialMockConnection andReturn(HttpData data) {
+	public SequentialMockConnection andReturn(SocketData data) {
 		this.responseData.add(data);
 		return this;
 	}

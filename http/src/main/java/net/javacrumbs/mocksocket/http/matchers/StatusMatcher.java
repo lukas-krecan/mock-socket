@@ -15,20 +15,20 @@
  */
 package net.javacrumbs.mocksocket.http.matchers;
 
-import net.javacrumbs.mocksocket.http.HttpProcessor;
+import net.javacrumbs.mocksocket.http.HttpParser;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 public class StatusMatcher  extends AbstractHttpMatcher  {
 
-	public StatusMatcher(Matcher<Integer> wrappedMatcher, String encoding) {
-		super(wrappedMatcher, encoding);
+	public StatusMatcher(Matcher<Integer> wrappedMatcher) {
+		super(wrappedMatcher);
 	}
 	
 	@Override
-	protected Object getValue(HttpProcessor httpProcessor) {
-		return httpProcessor.getStatus();
+	protected Object getValue(HttpParser httpParser) {
+		return httpParser.getStatus();
 	}
 
 	

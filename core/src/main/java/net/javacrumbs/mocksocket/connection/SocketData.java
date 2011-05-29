@@ -16,37 +16,20 @@
 
 package net.javacrumbs.mocksocket.connection;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-public class HttpData {
-	private static final String UTF8 = "UTF-8";
+/**
+ * Wraps socket data.
+ * @author Lukas Krecan
+ *
+ */
+public class SocketData {
 
-	private final byte[] data;
-	
-	private static boolean printAsString = true;
+	protected final byte[] data;
 
-	public HttpData(byte[] data) {
+	public SocketData(byte[] data) {
 		this.data = data;
 	}
-	
-
-	public HttpData(String data) {
-		this(data, UTF8);
-	}
-
-	public HttpData(String data, String charset) {
-		this(stringToBytes(data, charset));
-	}
-
-	private static byte[] stringToBytes(String data, String charset)  {
-		try {
-			return data.getBytes(charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException(e);
-		}
-	}
-	
 
 	public byte[] getBytes() {
 		return data;
@@ -54,22 +37,7 @@ public class HttpData {
 
 	@Override
 	public String toString() {
-		if (printAsString)
-		{
-			return getAsString(UTF8);
-		}
-		else
-		{
-			return Arrays.toString(data);
-		}
-	}
-
-	public String getAsString(String encoding) {
-		try {
-			return new String(data, UTF8);
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException(e);
-		}
+		return Arrays.toString(data);
 	}
 
 	@Override
@@ -88,20 +56,10 @@ public class HttpData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HttpData other = (HttpData) obj;
+		SocketData other = (SocketData) obj;
 		if (!Arrays.equals(data, other.data))
 			return false;
 		return true;
-	}
-
-
-	public static synchronized boolean isPrintAsString() {
-		return printAsString;
-	}
-
-
-	public static synchronized void setPrintAsString(boolean printAsString) {
-		HttpData.printAsString = printAsString;
 	}
 
 }

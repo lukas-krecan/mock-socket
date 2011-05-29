@@ -15,51 +15,49 @@
  */
 package net.javacrumbs.mocksocket.http.matchers;
 
-import net.javacrumbs.mocksocket.connection.HttpData;
-import net.javacrumbs.mocksocket.http.HttpProcessor;
+import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.http.HttpParser;
+import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public abstract class AbstractHttpMatcher extends BaseMatcher<HttpData> {
+public abstract class AbstractHttpMatcher extends BaseMatcher<SocketData> {
 
-	private final String encoding;
 	
 	private final Matcher<?> wrappedMatcher;
 
-	public AbstractHttpMatcher(Matcher<?> wrappedMatcher, String encoding) {
+	public AbstractHttpMatcher(Matcher<?> wrappedMatcher) {
 		this.wrappedMatcher = wrappedMatcher;
-		this.encoding = encoding;
 	}
 
 	public boolean matches(Object item) {
-		if (item instanceof HttpData) {
-			return doMatch(createHttpProcessor((HttpData)item));
+		if (item instanceof SocketData) {
+			return doMatch(createHttpParser((SocketData)item));
 		}
 		return false;
 	}
 	
-	protected boolean doMatch(HttpProcessor tester) throws AssertionError {
+	protected boolean doMatch(HttpParser tester) throws AssertionError {
 		return wrappedMatcher.matches(getValue(tester));
 	}
 
 	
-	protected Object describeValue(HttpProcessor httpTester) {
+	protected Object describeValue(HttpParser httpTester) {
 		return getValue(httpTester);
 	}
 	
-	protected abstract Object getValue(HttpProcessor httpTester);
+	protected abstract Object getValue(HttpParser httpParser);
 
 	public void describeMismatch(Object item, Description description) {
-    	description.appendText("was ").appendValue(describeValue(createHttpProcessor((HttpData)item)));
+    	description.appendText("was ").appendValue(describeValue(createHttpParser((HttpSocketData)item)));
     }
 
 
-	protected HttpProcessor createHttpProcessor(HttpData http) {
-		HttpProcessor processor = new HttpProcessor(encoding);
-		processor.parse(http);
-		return processor;
+	protected HttpParser createHttpParser(SocketData http) {
+		HttpParser parser = new HttpParser(http);
+		return parser;
 
 	}
 

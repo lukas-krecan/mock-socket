@@ -15,12 +15,12 @@
  */
 package net.javacrumbs.mocksocket.connection.matcher;
 
-import net.javacrumbs.mocksocket.connection.HttpData;
+import net.javacrumbs.mocksocket.connection.SocketData;
 
 import org.hamcrest.Matcher;
 
 public interface MatcherBasedMockRecorder {
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<HttpData> matcher);
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher);
 	
-	MatcherBasedMockRecorder thenReturn(HttpData data);
+	MatcherBasedMockRecorder thenReturn(SocketData data);
 }

@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import net.javacrumbs.mocksocket.connection.HttpData;
+import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 
 import org.apache.http.HttpResponse;
@@ -46,7 +46,7 @@ public class MockSocketTest {
 
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
-		expectCallTo("localhost:80").andReturn(new HttpData("HTTP/1.0 200 OK\n\nTest"));
+		expectCallTo("localhost:80").andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet("http://localhost/");
@@ -56,7 +56,7 @@ public class MockSocketTest {
 
 	@Test
 	public void testUrl() throws ClientProtocolException, IOException {
-		expectCallTo("localhost:80").andReturn(new HttpData("HTTP/1.0 200 OK\n\nTest"));
+		expectCallTo("localhost:80").andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
 		URL url = new URL("http://localhost/");
 		System.out.println(printStream(url.openStream()));
 	}

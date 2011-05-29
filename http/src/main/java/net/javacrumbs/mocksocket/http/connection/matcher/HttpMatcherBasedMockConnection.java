@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.http;
+package net.javacrumbs.mocksocket.http.connection.matcher;
 
-import java.io.IOException;
+import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
+import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
 
-import net.javacrumbs.mocksocket.connection.HttpData;
+public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection {
 
-import org.eclipse.jetty.testing.HttpTester;
-
-public class HttpProcessor extends HttpTester {
-	protected final String charset;
-	
-	public HttpProcessor(String charset) {
-		super(charset);
-		this.charset = charset;
+	public HttpMatcherBasedMockConnection(String address) {
+		super(address);
 	}
 
-	public void parse(HttpData httpData) {
-		try {
-			parse(httpData.getAsString(charset));
-		} catch (IOException e) {
-			throw new IllegalArgumentException("Can not parse data",e);
-		}
-		
+	@Override
+	protected SocketData createSocketData(byte[] data) {
+		return new HttpSocketData(data);
 	}
-
 }

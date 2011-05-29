@@ -1,5 +1,5 @@
-/**
- * Copyright 2009-2011 the original author or authors.
+/*
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.mocksocket.http.matchers;
 
-import net.javacrumbs.mocksocket.http.HttpParser;
+package net.javacrumbs.mocksocket.http.connection.sequential;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
+import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
+import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
 
-public class ContentMatcher  extends AbstractHttpMatcher {
+public class HttpSequentialMockConnection extends SequentialMockConnection {
 
-	public ContentMatcher(Matcher<String> wrappedMatcher) {
-		super(wrappedMatcher);
+	public HttpSequentialMockConnection(String address) {
+		super(address);
 	}
+	
 	@Override
-	protected Object getValue(HttpParser httpParser) {
-		return httpParser.getContent();
+	protected SocketData createSocketData(byte[] data) {
+		return new HttpSocketData(data);
 	}
 
-	public void describeTo(Description description) {
-		description.appendText("content ").appendDescriptionOf(getWrappedMatcher());
-	}
 }

@@ -15,7 +15,7 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import net.javacrumbs.mocksocket.connection.HttpData;
+import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.http.matchers.ContentMatcher;
 import net.javacrumbs.mocksocket.http.matchers.HeaderMatcher;
 import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
@@ -26,34 +26,26 @@ import org.hamcrest.core.CombinableMatcher;
 
 public class HttpMatchers {
 	
-	private static String encoding = "UTF-8";
 	
 	private HttpMatchers()
 	{
 	}
 	
-	public static CombinableMatcher<HttpData> status(Matcher<Integer> statusMatcher) {
-		return new CombinableMatcher<HttpData>(new StatusMatcher(statusMatcher, encoding));
+	public static CombinableMatcher<SocketData> status(Matcher<Integer> statusMatcher) {
+		return new CombinableMatcher<SocketData>(new StatusMatcher(statusMatcher));
 	}
 
-	public static CombinableMatcher<HttpData> header(String header, Matcher<String> headerMatcher) {
-		return new CombinableMatcher<HttpData>(new HeaderMatcher(header, headerMatcher, encoding));
+	public static CombinableMatcher<SocketData> header(String header, Matcher<String> headerMatcher) {
+		return new CombinableMatcher<SocketData>(new HeaderMatcher(header, headerMatcher));
 	}
 	
-	public static CombinableMatcher<HttpData> content(Matcher<String> contentMatcher) {
-		return new CombinableMatcher<HttpData>(new ContentMatcher(contentMatcher, encoding));
+	public static CombinableMatcher<SocketData> content(Matcher<String> contentMatcher) {
+		return new CombinableMatcher<SocketData>(new ContentMatcher(contentMatcher));
 	}
 
-	public static CombinableMatcher<HttpData> method(Matcher<String> methodMatcher) {
-		return new CombinableMatcher<HttpData>(new MethodMatcher(methodMatcher, encoding));
+	public static CombinableMatcher<SocketData> method(Matcher<String> methodMatcher) {
+		return new CombinableMatcher<SocketData>(new MethodMatcher(methodMatcher));
 	}
 
-	public static synchronized String getEncoding() {
-		return encoding;
-	}
-
-	public static synchronized void setEncoding(String encoding) {
-		HttpMatchers.encoding = encoding;
-	}
 
 }

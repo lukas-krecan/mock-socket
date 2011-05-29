@@ -35,24 +35,32 @@ import org.hamcrest.Matcher;
 public class UniversalMockConnection implements UniversalMockRecorder, MockConnection {
 	private final String address;
 
-	private MockConnection wrappedConnection;
+	private AbstractMockConnection wrappedConnection;
 	
 	public UniversalMockConnection(String address) {
 		this.address = address;
 	}
 
-	public SequentialMockRecorder andReturn(HttpData data) {
-		SequentialMockConnection connection = new SequentialMockConnection(address);
+	public SequentialMockRecorder andReturn(SocketData data) {
+		SequentialMockConnection connection = createSequentialConnection();
 		wrappedConnection = connection;
 		connection.andReturn(data);
 		return connection;
 	}
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<HttpData> matcher) {
-		MatcherBasedMockConnection connection = new MatcherBasedMockConnection(address);
+	protected SequentialMockConnection createSequentialConnection() {
+		return new SequentialMockConnection(address);
+	}
+
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
+		MatcherBasedMockConnection connection = createMatcherBasedConnection();
 		connection.andWhenPayload(matcher);
 		wrappedConnection = connection;
 		return connection;
+	}
+
+	protected MatcherBasedMockConnection createMatcherBasedConnection() {
+		return new MatcherBasedMockConnection(address);
 	}
 
 	public void onCreate() {
@@ -67,8 +75,12 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.getOutputStream();
 	}
 
-	public List<HttpData> requestData() {
+	public List<SocketData> requestData() {
 		return wrappedConnection.requestData();
+	}
+
+	protected String getAddress() {
+		return address;
 	}
 
 }

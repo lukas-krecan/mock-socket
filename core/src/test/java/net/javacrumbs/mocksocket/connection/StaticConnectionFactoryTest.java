@@ -34,10 +34,10 @@ public class StaticConnectionFactoryTest {
 
 	private static final String ADDRESS1 = "localhost:1111";
 	private static final String ADDRESS2 = "localhost:2222";
-	private static final HttpData DATA1 = new HttpData(new byte[]{1,1,1,1});
-	private static final HttpData DATA2 = new HttpData(new byte[]{2,2,2,2});
-	private static final HttpData DATA3 = new HttpData(new byte[]{3,3,3,3});
-	private static final HttpData DATA4 = new HttpData(new byte[]{4,4,4,4});
+	private static final SocketData DATA1 = new SocketData(new byte[]{1,1,1,1});
+	private static final SocketData DATA2 = new SocketData(new byte[]{2,2,2,2});
+	private static final SocketData DATA3 = new SocketData(new byte[]{3,3,3,3});
+	private static final SocketData DATA4 = new SocketData(new byte[]{4,4,4,4});
 	private StaticConnectionFactory connectionFactory  = new StaticConnectionFactory();
 
 	@After
@@ -141,7 +141,6 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testUnexpected() throws IOException
 	{
-		HttpData.setPrintAsString(false);
 		StaticConnectionFactory.expectCallTo(ADDRESS1)
 			.andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
@@ -156,7 +155,6 @@ public class StaticConnectionFactoryTest {
 		{
 			assertEquals("No matcher matches request [3, 3, 3, 3] for address \"localhost:1111\". Do not know which response to return.", e.getMessage());
 		}
-		HttpData.setPrintAsString(true);
 	}
 	@Test
 	public void testUnexpectedMultiple() throws IOException
@@ -176,10 +174,10 @@ public class StaticConnectionFactoryTest {
 		}
 	}
 	
-	private void checkConnection(String address, HttpData outData) throws IOException {
+	private void checkConnection(String address, SocketData outData) throws IOException {
 		checkConnection(address, outData, null);
 	}
-	private void checkConnection(String address, HttpData outData, HttpData inData) throws IOException {
+	private void checkConnection(String address, SocketData outData, SocketData inData) throws IOException {
 		Connection connection = connectionFactory.createConnection(address);
 		assertNotNull(connection);
 		if (inData!=null)
@@ -187,6 +185,6 @@ public class StaticConnectionFactoryTest {
 			connection.getOutputStream().write(inData.getBytes());
 		}
 		byte[] actualOutData = FileCopyUtils.copyToByteArray(connection.getInputStream());
-		assertThat(new HttpData(actualOutData), is(outData));	
+		assertThat(new SocketData(actualOutData), is(outData));	
 	}
 }
