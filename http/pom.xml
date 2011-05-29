@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>net.javacrumbs</groupId>
 		<artifactId>mock-socket-parent</artifactId>
-		<version>0.3-SNAPSHOT</version>
+		<version>0.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>net.javacrumbs</groupId>
 	<artifactId>mock-socket-http</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<name>mock-socket-http</name>
 
 	<dependencies>
@@ -27,7 +27,7 @@
 		<dependency>
 		    <groupId>net.javacrumbs</groupId>
 			<artifactId>mock-socket-core</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<version>0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
