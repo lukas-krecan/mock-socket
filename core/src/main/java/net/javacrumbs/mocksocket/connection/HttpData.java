@@ -20,20 +20,19 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class HttpData {
-	private final byte[] data;
-	private final boolean printAsString;
+	private static final String UTF8 = "UTF-8";
 
-	public HttpData(byte[] data, boolean printAsString) {
+	private final byte[] data;
+	
+	private static boolean printAsString = true;
+
+	public HttpData(byte[] data) {
 		this.data = data;
-		this.printAsString = printAsString;
 	}
 	
-	public HttpData(byte[] data) {
-		this(data, true);
-	}
 
 	public HttpData(String data) {
-		this(data, "UTF-8");
+		this(data, UTF8);
 	}
 
 	public HttpData(String data, String charset) {
@@ -57,7 +56,7 @@ public class HttpData {
 	public String toString() {
 		if (printAsString)
 		{
-			return getAsString("UTF-8");
+			return getAsString(UTF8);
 		}
 		else
 		{
@@ -67,7 +66,7 @@ public class HttpData {
 
 	public String getAsString(String encoding) {
 		try {
-			return new String(data, "UTF-8");
+			return new String(data, UTF8);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException(e);
 		}
@@ -94,5 +93,15 @@ public class HttpData {
 			return false;
 		return true;
 	}
-	
+
+
+	public static synchronized boolean isPrintAsString() {
+		return printAsString;
+	}
+
+
+	public static synchronized void setPrintAsString(boolean printAsString) {
+		HttpData.printAsString = printAsString;
+	}
+
 }

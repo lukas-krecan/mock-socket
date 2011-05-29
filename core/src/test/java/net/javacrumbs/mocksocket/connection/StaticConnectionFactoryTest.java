@@ -141,6 +141,7 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testUnexpected() throws IOException
 	{
+		HttpData.setPrintAsString(false);
 		StaticConnectionFactory.expectCallTo(ADDRESS1)
 			.andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
@@ -155,6 +156,7 @@ public class StaticConnectionFactoryTest {
 		{
 			assertEquals("No matcher matches request [3, 3, 3, 3] for address \"localhost:1111\". Do not know which response to return.", e.getMessage());
 		}
+		HttpData.setPrintAsString(true);
 	}
 	@Test
 	public void testUnexpectedMultiple() throws IOException
