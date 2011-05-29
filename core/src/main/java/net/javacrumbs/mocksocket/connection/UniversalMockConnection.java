@@ -41,14 +41,14 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		this.address = address;
 	}
 
-	public SequentialMockRecorder andReturn(byte[] data) {
+	public SequentialMockRecorder andReturn(HttpData data) {
 		SequentialMockConnection connection = new SequentialMockConnection(address);
 		wrappedConnection = connection;
 		connection.andReturn(data);
 		return connection;
 	}
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<HttpData> matcher) {
 		MatcherBasedMockConnection connection = new MatcherBasedMockConnection(address);
 		connection.andWhenPayload(matcher);
 		wrappedConnection = connection;
@@ -67,7 +67,7 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.getOutputStream();
 	}
 
-	public List<byte[]> requestData() {
+	public List<HttpData> requestData() {
 		return wrappedConnection.requestData();
 	}
 

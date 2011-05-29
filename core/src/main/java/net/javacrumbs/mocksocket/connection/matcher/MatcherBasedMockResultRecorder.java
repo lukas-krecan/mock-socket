@@ -15,8 +15,10 @@
  */
 package net.javacrumbs.mocksocket.connection.matcher;
 
+import net.javacrumbs.mocksocket.connection.HttpData;
+
 public interface MatcherBasedMockResultRecorder {
 
-	MatcherBasedMockRecorder thenReturn(byte[] data);
+	MatcherBasedMockRecorder thenReturn(HttpData data);
 
 }

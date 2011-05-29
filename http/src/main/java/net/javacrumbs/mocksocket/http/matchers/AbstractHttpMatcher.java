@@ -15,15 +15,14 @@
  */
 package net.javacrumbs.mocksocket.http.matchers;
 
-import java.io.InputStream;
-
+import net.javacrumbs.mocksocket.connection.HttpData;
 import net.javacrumbs.mocksocket.http.HttpProcessor;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public abstract class AbstractHttpMatcher <T> extends BaseMatcher<T> {
+public abstract class AbstractHttpMatcher extends BaseMatcher<HttpData> {
 
 	private final String encoding;
 	
@@ -35,8 +34,8 @@ public abstract class AbstractHttpMatcher <T> extends BaseMatcher<T> {
 	}
 
 	public boolean matches(Object item) {
-		if (item instanceof String || item instanceof byte[] || item instanceof InputStream) {
-			return doMatch(getHttpProcessor(item));
+		if (item instanceof HttpData) {
+			return doMatch(createHttpProcessor((HttpData)item));
 		}
 		return false;
 	}
@@ -53,11 +52,11 @@ public abstract class AbstractHttpMatcher <T> extends BaseMatcher<T> {
 	protected abstract Object getValue(HttpProcessor httpTester);
 
 	public void describeMismatch(Object item, Description description) {
-    	description.appendText("was ").appendValue(describeValue(getHttpProcessor(item)));
+    	description.appendText("was ").appendValue(describeValue(createHttpProcessor((HttpData)item)));
     }
 
 
-	protected HttpProcessor getHttpProcessor(Object http) {
+	protected HttpProcessor createHttpProcessor(HttpData http) {
 		HttpProcessor processor = new HttpProcessor(encoding);
 		processor.parse(http);
 		return processor;

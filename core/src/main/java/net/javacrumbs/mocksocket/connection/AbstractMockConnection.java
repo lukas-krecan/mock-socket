@@ -46,10 +46,10 @@ public abstract class AbstractMockConnection implements MockConnection{
 		return requestData.get(actualConnection);
 	}
 	
-	public List<byte[]> requestData() {
-		List<byte[]> result = new ArrayList<byte[]>();
+	public List<HttpData> requestData() {
+		List<HttpData> result = new ArrayList<HttpData>();
 		for (ByteArrayOutputStream data : requestData) {
-			result.add(data.toByteArray());
+			result.add(new HttpData(data.toByteArray()));
 		}
 		return result;
 	}

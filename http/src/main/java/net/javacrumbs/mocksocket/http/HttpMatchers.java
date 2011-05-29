@@ -15,6 +15,7 @@
  */
 package net.javacrumbs.mocksocket.http;
 
+import net.javacrumbs.mocksocket.connection.HttpData;
 import net.javacrumbs.mocksocket.http.matchers.ContentMatcher;
 import net.javacrumbs.mocksocket.http.matchers.HeaderMatcher;
 import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
@@ -31,20 +32,20 @@ public class HttpMatchers {
 	{
 	}
 	
-	public static CombinableMatcher<byte[]> status(Matcher<Integer> statusMatcher) {
-		return new CombinableMatcher<byte[]>(new StatusMatcher<byte[]>(statusMatcher, encoding));
+	public static CombinableMatcher<HttpData> status(Matcher<Integer> statusMatcher) {
+		return new CombinableMatcher<HttpData>(new StatusMatcher(statusMatcher, encoding));
 	}
 
-	public static CombinableMatcher<byte[]> header(String header, Matcher<String> headerMatcher) {
-		return new CombinableMatcher<byte[]>(new HeaderMatcher<byte[]>(header, headerMatcher, encoding));
+	public static CombinableMatcher<HttpData> header(String header, Matcher<String> headerMatcher) {
+		return new CombinableMatcher<HttpData>(new HeaderMatcher(header, headerMatcher, encoding));
 	}
 	
-	public static CombinableMatcher<byte[]> content(Matcher<String> contentMatcher) {
-		return new CombinableMatcher<byte[]>(new ContentMatcher<byte[]>(contentMatcher, encoding));
+	public static CombinableMatcher<HttpData> content(Matcher<String> contentMatcher) {
+		return new CombinableMatcher<HttpData>(new ContentMatcher(contentMatcher, encoding));
 	}
 
-	public static CombinableMatcher<byte[]> method(Matcher<String> methodMatcher) {
-		return new CombinableMatcher<byte[]>(new MethodMatcher<byte[]>(methodMatcher, encoding));
+	public static CombinableMatcher<HttpData> method(Matcher<String> methodMatcher) {
+		return new CombinableMatcher<HttpData>(new MethodMatcher(methodMatcher, encoding));
 	}
 
 	public static synchronized String getEncoding() {

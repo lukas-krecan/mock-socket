@@ -16,11 +16,9 @@
 
 package net.javacrumbs.mocksocket.http;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+
+import net.javacrumbs.mocksocket.connection.HttpData;
 
 import org.eclipse.jetty.testing.HttpTester;
 
@@ -32,52 +30,13 @@ public class HttpProcessor extends HttpTester {
 		this.charset = charset;
 	}
 
-	public void parse(Object http) {
+	public void parse(HttpData httpData) {
 		try {
-			parse(objectToString(http));
-		} 
-		catch (IOException e) {
-			throw new AssertionError("Can not parse http " + objectToString(http));
-		}
-
-	}
-
-	private String objectToString(Object http) {
-		try {
-			if (http instanceof String)
-			{
-				return (String)http;
-			}
-			else if (http instanceof byte[])
-			{
-				return new String((byte[])http, charset);
-			}
-			else if (http instanceof InputStream)
-			{
-				return streamToString((InputStream)http);
-			}
-			else
-			{
-				throw new UnsupportedOperationException("Can not parse object of type "+http.getClass());
-			}
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException(e);
-		}
-	}
-
-	private String streamToString(InputStream http)  {
-		try {
-			java.io.BufferedReader reader = new BufferedReader(new InputStreamReader(http, charset));
-			String line;
-			StringBuilder builder = new StringBuilder();
-			while ((line = reader.readLine())!=null)
-			{
-				builder.append(line);
-			}
-			return builder.toString();
+			parse(httpData.getAsString(charset));
 		} catch (IOException e) {
-			throw new IllegalStateException("Can not parse http "+http);
+			throw new IllegalArgumentException("Can not parse data",e);
 		}
+		
 	}
 
 }

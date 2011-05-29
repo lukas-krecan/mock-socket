@@ -15,11 +15,13 @@
  */
 package net.javacrumbs.mocksocket.connection.sequential;
 
+import net.javacrumbs.mocksocket.connection.HttpData;
+
 /**
  * Records calls in sequence.
  * @author Lukas Krecan
  *
  */
 public interface SequentialMockRecorder {
-	public SequentialMockRecorder andReturn(byte[] data);
+	public SequentialMockRecorder andReturn(HttpData data);
 }

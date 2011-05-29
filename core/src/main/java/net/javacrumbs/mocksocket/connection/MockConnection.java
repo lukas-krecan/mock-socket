@@ -20,6 +20,6 @@ import java.util.List;
 public interface MockConnection extends Connection {
 	public void onCreate();
 
-	public List<byte[]> requestData();
+	public List<HttpData> requestData();
 	
 }

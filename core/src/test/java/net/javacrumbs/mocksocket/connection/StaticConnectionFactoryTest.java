@@ -34,10 +34,10 @@ public class StaticConnectionFactoryTest {
 
 	private static final String ADDRESS1 = "localhost:1111";
 	private static final String ADDRESS2 = "localhost:2222";
-	private static final byte[] DATA1 = new byte[]{1,1,1,1};
-	private static final byte[] DATA2 = new byte[]{2,2,2,2};
-	private static final byte[] DATA3 = new byte[]{3,3,3,3};
-	private static final byte[] DATA4 = new byte[]{4,4,4,4};
+	private static final HttpData DATA1 = new HttpData(new byte[]{1,1,1,1});
+	private static final HttpData DATA2 = new HttpData(new byte[]{2,2,2,2});
+	private static final HttpData DATA3 = new HttpData(new byte[]{3,3,3,3});
+	private static final HttpData DATA4 = new HttpData(new byte[]{4,4,4,4});
 	private StaticConnectionFactory connectionFactory  = new StaticConnectionFactory();
 
 	@After
@@ -145,7 +145,7 @@ public class StaticConnectionFactoryTest {
 			.andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
-		connection.getOutputStream().write(DATA3);
+		connection.getOutputStream().write(DATA3.getBytes());
 		try
 		{
 			connection.getInputStream().read();
@@ -162,7 +162,7 @@ public class StaticConnectionFactoryTest {
 		StaticConnectionFactory.expectCallTo(ADDRESS1).andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
-		connection.getOutputStream().write(DATA4);
+		connection.getOutputStream().write(DATA4.getBytes());
 		try
 		{
 			connection.getInputStream().read();
@@ -174,17 +174,17 @@ public class StaticConnectionFactoryTest {
 		}
 	}
 	
-	private void checkConnection(String address, byte[] outData) throws IOException {
+	private void checkConnection(String address, HttpData outData) throws IOException {
 		checkConnection(address, outData, null);
 	}
-	private void checkConnection(String address, byte[] outData, byte[] inData) throws IOException {
+	private void checkConnection(String address, HttpData outData, HttpData inData) throws IOException {
 		Connection connection = connectionFactory.createConnection(address);
 		assertNotNull(connection);
 		if (inData!=null)
 		{
-			connection.getOutputStream().write(inData);
+			connection.getOutputStream().write(inData.getBytes());
 		}
 		byte[] actualOutData = FileCopyUtils.copyToByteArray(connection.getInputStream());
-		assertThat(actualOutData, is(outData));	
+		assertThat(new HttpData(actualOutData), is(outData));	
 	}
 }

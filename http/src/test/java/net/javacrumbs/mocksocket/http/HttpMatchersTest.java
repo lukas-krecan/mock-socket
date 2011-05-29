@@ -20,12 +20,13 @@ import static net.javacrumbs.mocksocket.http.HttpMatchers.header;
 import static net.javacrumbs.mocksocket.http.HttpMatchers.status;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import net.javacrumbs.mocksocket.connection.HttpData;
 
 import org.junit.Test;
 
 
 public class HttpMatchersTest {
-	private static final byte[] REQUEST = "HTTP/1.0 200 OK\nLast-Modified: Wed, 10 Mar 2010 19:11:49 GMT\n\nTest".getBytes();
+	private static final HttpData REQUEST = new HttpData("HTTP/1.0 200 OK\nLast-Modified: Wed, 10 Mar 2010 19:11:49 GMT\n\nTest");
 
 	@Test
 	public void testMatchStatus()

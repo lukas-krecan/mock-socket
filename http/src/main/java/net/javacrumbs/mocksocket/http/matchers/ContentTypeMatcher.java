@@ -20,9 +20,9 @@ import net.javacrumbs.mocksocket.http.HttpProcessor;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public class ContentTypeMatcher <T> extends AbstractHttpMatcher<T> {
+public class ContentTypeMatcher  extends AbstractHttpMatcher {
 
-	public ContentTypeMatcher(Matcher<?> wrappedMatcher, String encoding) {
+	public ContentTypeMatcher(Matcher<String> wrappedMatcher, String encoding) {
 		super(wrappedMatcher, encoding);
 	}
 

@@ -20,7 +20,7 @@ import net.javacrumbs.mocksocket.http.HttpProcessor;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public class HeaderMatcher <T> extends AbstractHttpMatcher <T> {
+public class HeaderMatcher  extends AbstractHttpMatcher  {
 	
 	private final String header;
 

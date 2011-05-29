@@ -20,10 +20,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
+import net.javacrumbs.mocksocket.connection.HttpData;
 import net.javacrumbs.mocksocket.connection.MockConnection;
 
 import org.hamcrest.Matcher;
@@ -47,13 +47,13 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		return new RedirectingInputStream(getOutputStream());
 	}
 
-	public MatcherBasedMockRecorder thenReturn(byte[] data) {
+	public MatcherBasedMockRecorder thenReturn(HttpData data) {
 		matchers.get(matchers.size()-1).addData(data);
 		return this;
 	}
 
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<byte[]> matcher) {
+	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<HttpData> matcher) {
 		matchers.add(new MatcherWithData(matcher));
 		return this;
 	}
@@ -84,31 +84,31 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		}
 
 		private InputStream findInputStream() throws IOException, AssertionError {
-			byte[] request = outputStream.toByteArray();
+			HttpData request = new HttpData(outputStream.toByteArray());
 			for (MatcherWithData matcher : matchers) {
 				if (matcher.getMatcher().matches(request))
 				{
 					return matcher.getResponse();
 				}
 			}
-			throw new AssertionError("No matcher matches request "+Arrays.toString(request)+" for address \""+address+"\". Do not know which response to return.");
+			throw new AssertionError("No matcher matches request "+request+" for address \""+address+"\". Do not know which response to return.");
 		}
 	}
 	
 	class MatcherWithData
 	{
-		private final Matcher<byte[]> matcher;
-		private final List<byte[]> responseData = new ArrayList<byte[]>();
+		private final Matcher<HttpData> matcher;
+		private final List<HttpData> responseData = new ArrayList<HttpData>();
 		private int actualResponse = 0;		
 		
-		public MatcherWithData(Matcher<byte[]> matcher) {
+		public MatcherWithData(Matcher<HttpData> matcher) {
 			this.matcher = matcher;
 		}
 		
 		public InputStream getResponse() {
 			if (responseData.size()>actualResponse)
 			{
-				return new ByteArrayInputStream(responseData.get(actualResponse++));
+				return new ByteArrayInputStream(responseData.get(actualResponse++).getBytes());
 			}
 			else
 			{
@@ -116,7 +116,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			}
 		}
 
-		public void addData(byte[] data)
+		public void addData(HttpData data)
 		{
 			responseData.add(data);
 		}
