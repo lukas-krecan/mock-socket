@@ -18,7 +18,7 @@ package net.javacrumbs.mocksocket.http.connection.sequential;
 
 import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
-import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
+import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 public class HttpSequentialMockConnection extends SequentialMockConnection {
 
@@ -28,7 +28,7 @@ public class HttpSequentialMockConnection extends SequentialMockConnection {
 	
 	@Override
 	protected SocketData createSocketData(byte[] data) {
-		return new HttpSocketData(data);
+		return new HttpData(data);
 	}
 
 }

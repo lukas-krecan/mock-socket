@@ -18,7 +18,7 @@ package net.javacrumbs.mocksocket.http.connection.matcher;
 
 import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
-import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
+import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection {
 
@@ -28,6 +28,6 @@ public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection {
 
 	@Override
 	protected SocketData createSocketData(byte[] data) {
-		return new HttpSocketData(data);
+		return new HttpData(data);
 	}
 }

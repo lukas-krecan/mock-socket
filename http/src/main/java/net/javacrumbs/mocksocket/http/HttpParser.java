@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import net.javacrumbs.mocksocket.connection.SocketData;
-import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
+import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 import org.eclipse.jetty.testing.HttpTester;
 
@@ -28,17 +28,17 @@ public class HttpParser  {
 	private final HttpTester httpTester;
 	
 	public HttpParser(SocketData data) {
-		if (data instanceof HttpSocketData)
+		if (data instanceof HttpData)
 		{
-			httpTester = createTester((HttpSocketData)data);
+			httpTester = createTester((HttpData)data);
 		}
 		else
 		{
-			httpTester = createTester(new HttpSocketData(data.getBytes()));
+			httpTester = createTester(new HttpData(data.getBytes()));
 		}
 	}
 
-	private HttpTester createTester(HttpSocketData httpData) {
+	private HttpTester createTester(HttpData httpData) {
 		HttpTester httpTester = new HttpTester(httpData.getCharset());	
 		try {
 			httpTester.parse(httpData.getAsString());

@@ -26,7 +26,7 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 import java.io.IOException;
 
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
-import net.javacrumbs.mocksocket.http.connection.HttpSocketData;
+import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -50,8 +50,8 @@ public class SampleTest {
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
 		expectCallTo("localhost:80")
-			.andWhenPayload(method(is("GET"))).thenReturn(new HttpSocketData("HTTP/1.0 200 OK\n\nTest"))
-			.andWhenPayload(method(is("POST"))).thenReturn(new HttpSocketData("HTTP/1.0 404 Not Found\n"));
+			.andWhenPayload(method(is("GET"))).thenReturn(new HttpData("HTTP/1.0 200 OK\n\nTest"))
+			.andWhenPayload(method(is("POST"))).thenReturn(new HttpData("HTTP/1.0 404 Not Found\n"));
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		

@@ -25,7 +25,7 @@ import net.javacrumbs.mocksocket.connection.SocketData;
  * @author Lukas Krecan
  *
  */
-public class HttpSocketData extends SocketData {
+public class HttpData extends SocketData {
 	private static final String UTF8 = "UTF-8";
 	
 	private final String charset;
@@ -35,21 +35,21 @@ public class HttpSocketData extends SocketData {
 	 * @param data
 	 * @param charset for pretty printing
 	 */
-	public HttpSocketData(byte[] data, String charset) {
+	public HttpData(byte[] data, String charset) {
 		super(data);
 		this.charset = charset;
 	}
 
-	public HttpSocketData(byte[] data) {
+	public HttpData(byte[] data) {
 		this(data, UTF8);
 	}
 
 
-	public HttpSocketData(String data, String charset) {
+	public HttpData(String data, String charset) {
 		this(stringToBytes(data, charset));
 	}
 
-	public HttpSocketData(String data) {
+	public HttpData(String data) {
 		this(data, UTF8);
 	}
 
