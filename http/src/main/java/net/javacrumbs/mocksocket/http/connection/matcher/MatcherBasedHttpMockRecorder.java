@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.mocksocket.connection.matcher;
+package net.javacrumbs.mocksocket.http.connection.matcher;
 
 import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockRecorder;
 
 import org.hamcrest.Matcher;
 
-public interface MatcherBasedMockRecorder extends MatcherBasedMockResultRecorder{
-	MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher);
+public interface MatcherBasedHttpMockRecorder extends MatcherBasedMockRecorder, MatcherBasedHttpMockResultRecorder{
+	public MatcherBasedHttpMockResultRecorder andWhenPayload(Matcher<SocketData> matcher);
 }

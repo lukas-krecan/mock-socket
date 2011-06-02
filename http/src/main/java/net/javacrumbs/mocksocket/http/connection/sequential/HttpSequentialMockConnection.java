@@ -20,7 +20,7 @@ import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
 import net.javacrumbs.mocksocket.http.connection.HttpData;
 
-public class HttpSequentialMockConnection extends SequentialMockConnection {
+public class HttpSequentialMockConnection extends SequentialMockConnection implements SequentialHttpMockRecorder{
 
 	public HttpSequentialMockConnection(String address) {
 		super(address);
@@ -29,6 +29,15 @@ public class HttpSequentialMockConnection extends SequentialMockConnection {
 	@Override
 	protected SocketData createSocketData(byte[] data) {
 		return new HttpData(data);
+	}
+	
+	@Override
+	public SequentialHttpMockRecorder andReturn(SocketData data) {
+		return (SequentialHttpMockRecorder) super.andReturn(data);
+	}
+	
+	public SequentialHttpMockRecorder andReturn(String data) {
+		return andReturn(new HttpData(data));
 	}
 
 }

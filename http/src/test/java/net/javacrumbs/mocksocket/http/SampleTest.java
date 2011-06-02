@@ -26,7 +26,6 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 import java.io.IOException;
 
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
-import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -50,8 +49,8 @@ public class SampleTest {
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
 		expectCallTo("localhost:80")
-			.andWhenPayload(method(is("GET"))).thenReturn(new HttpData("HTTP/1.0 200 OK\n\nTest"))
-			.andWhenPayload(method(is("POST"))).thenReturn(new HttpData("HTTP/1.0 404 Not Found\n"));
+			.andWhenPayload(method(is("GET"))).thenReturn("HTTP/1.0 200 OK\n\nTest")
+			.andWhenPayload(method(is("POST"))).thenReturn("HTTP/1.0 404 Not Found\n");
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
@@ -63,6 +62,27 @@ public class SampleTest {
 		assertThat(connection("localhost:80").requestData(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 
+		HttpPost httppost = new HttpPost("http://localhost/");
+		HttpResponse postResponse = httpclient.execute(httppost);
+		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));
+		httppost.abort();
+	}
+	@Test
+	public void testHttpClientSequential() throws ClientProtocolException, IOException {
+		expectCallTo("localhost:80")
+		.andReturn("HTTP/1.0 200 OK\n\nTest")
+		.andReturn("HTTP/1.0 404 Not Found\n");
+		
+		HttpClient httpclient = new DefaultHttpClient();
+		
+		HttpGet httpget = new HttpGet("http://localhost/");
+		httpget.addHeader("Accept","text/plain");
+		HttpResponse getResponse = httpclient.execute(httpget);
+		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
+		
+		assertThat(connection("localhost:80").requestData(), hasItem(header("Accept", is("text/plain"))));
+		httpget.abort();
+		
 		HttpPost httppost = new HttpPost("http://localhost/");
 		HttpResponse postResponse = httpclient.execute(httppost);
 		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));

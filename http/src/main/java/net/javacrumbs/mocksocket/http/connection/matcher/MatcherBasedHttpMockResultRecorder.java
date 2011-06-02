@@ -1,5 +1,5 @@
-/**
- * Copyright 2009-2011 the original author or authors.
+/*
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.mocksocket.connection.matcher;
+
+package net.javacrumbs.mocksocket.http.connection.matcher;
 
 import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
 
-import org.hamcrest.Matcher;
+public interface MatcherBasedHttpMockResultRecorder extends MatcherBasedMockResultRecorder {
+	MatcherBasedHttpMockRecorder thenReturn(SocketData data);
 
-public interface MatcherBasedMockRecorder extends MatcherBasedMockResultRecorder{
-	MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher);
+	MatcherBasedHttpMockRecorder thenReturn(String data);
 }

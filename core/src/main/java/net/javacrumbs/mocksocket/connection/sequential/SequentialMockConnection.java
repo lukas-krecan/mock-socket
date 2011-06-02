@@ -37,7 +37,7 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		this.address = address;
 	}
 
-	public SequentialMockConnection andReturn(SocketData data) {
+	public SequentialMockRecorder andReturn(SocketData data) {
 		this.responseData.add(data);
 		return this;
 	}

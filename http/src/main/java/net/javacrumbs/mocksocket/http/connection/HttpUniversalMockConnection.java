@@ -16,13 +16,18 @@
 
 package net.javacrumbs.mocksocket.http.connection;
 
+import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.UniversalMockConnection;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
 import net.javacrumbs.mocksocket.http.connection.matcher.HttpMatcherBasedMockConnection;
+import net.javacrumbs.mocksocket.http.connection.matcher.MatcherBasedHttpMockResultRecorder;
 import net.javacrumbs.mocksocket.http.connection.sequential.HttpSequentialMockConnection;
+import net.javacrumbs.mocksocket.http.connection.sequential.SequentialHttpMockRecorder;
 
-public class HttpUniversalMockConnection extends UniversalMockConnection {
+import org.hamcrest.Matcher;
+
+public class HttpUniversalMockConnection extends UniversalMockConnection implements UniversalHttpMockRecorder{
 
 	public HttpUniversalMockConnection(String address) {
 		super(address);
@@ -36,5 +41,19 @@ public class HttpUniversalMockConnection extends UniversalMockConnection {
 	@Override
 	protected SequentialMockConnection createSequentialConnection() {
 		return new HttpSequentialMockConnection(getAddress());
+	}
+	
+	public SequentialHttpMockRecorder andReturn(String data){
+		return andReturn(new HttpData(data));
+	}
+	
+	@Override
+	public SequentialHttpMockRecorder andReturn(SocketData data) {
+		return (SequentialHttpMockRecorder)super.andReturn(data);
+	}
+	
+	@Override
+	public MatcherBasedHttpMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
+		return (MatcherBasedHttpMockResultRecorder)super.andWhenPayload(matcher);
 	}
 }

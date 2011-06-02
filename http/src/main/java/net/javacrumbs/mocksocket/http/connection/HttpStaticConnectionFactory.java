@@ -17,8 +17,6 @@
 package net.javacrumbs.mocksocket.http.connection;
 
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
-import net.javacrumbs.mocksocket.connection.UniversalMockConnection;
-import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 
 /**
  * Special factory for HTTP connections.
@@ -26,8 +24,8 @@ import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 public class HttpStaticConnectionFactory extends StaticConnectionFactory{
 	
 	
-	public synchronized static UniversalMockRecorder expectCallTo(String address) {
-		UniversalMockConnection mockConnection = new HttpUniversalMockConnection(address);
+	public synchronized static UniversalHttpMockRecorder expectCallTo(String address) {
+		HttpUniversalMockConnection mockConnection = new HttpUniversalMockConnection(address);
 		if (connection(address)==null)
 		{
 			addExpectedConnection(address, mockConnection);

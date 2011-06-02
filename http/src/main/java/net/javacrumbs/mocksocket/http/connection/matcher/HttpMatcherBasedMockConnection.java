@@ -20,7 +20,9 @@ import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
 import net.javacrumbs.mocksocket.http.connection.HttpData;
 
-public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection {
+import org.hamcrest.Matcher;
+
+public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection implements MatcherBasedHttpMockRecorder{
 
 	public HttpMatcherBasedMockConnection(String address) {
 		super(address);
@@ -29,5 +31,19 @@ public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection {
 	@Override
 	protected SocketData createSocketData(byte[] data) {
 		return new HttpData(data);
+	}
+	
+	@Override
+	public MatcherBasedHttpMockRecorder thenReturn(SocketData data) {
+		return (MatcherBasedHttpMockRecorder)super.thenReturn(data);
+	}
+	
+	public MatcherBasedHttpMockRecorder thenReturn(String data) {
+		return thenReturn(new HttpData(data));
+	}
+	
+	@Override
+	public MatcherBasedHttpMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
+		return (MatcherBasedHttpMockResultRecorder) super.andWhenPayload(matcher);
 	}
 }
