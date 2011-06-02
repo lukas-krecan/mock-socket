@@ -25,15 +25,15 @@ public class HttpStaticConnectionFactory extends StaticConnectionFactory{
 	
 	
 	public synchronized static UniversalHttpMockRecorder expectCallTo(String address) {
-		HttpUniversalMockConnection mockConnection = new HttpUniversalMockConnection(address);
 		if (connection(address)==null)
 		{
+			HttpUniversalMockConnection mockConnection = new HttpUniversalMockConnection(address);
 			addExpectedConnection(address, mockConnection);
+			return mockConnection;
 		}
 		else
 		{
 			throw new IllegalArgumentException("Can not call expect twice with the same address. You have to call reset before each test. If you need simulate multiple requests to the same address, please call andReturn several times.");
 		}
-		return mockConnection;
 	}
 }

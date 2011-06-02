@@ -75,6 +75,17 @@ public class StaticConnectionFactoryTest {
 		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA3));
 		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(1), is(DATA4));
 	}
+	@Test
+	public void testExpectTwoUniversal() throws IOException
+	{
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2).andReturn(DATA1);
+		
+		checkConnection(ADDRESS1,DATA2, DATA3);
+		checkConnection(ADDRESS1,DATA1, DATA4);
+		
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA3));
+		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(1), is(DATA4));
+	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
 	{
