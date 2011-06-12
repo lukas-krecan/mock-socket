@@ -37,12 +37,6 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 
 	private final List<MatcherWithData> matchers = new ArrayList<MatcherWithData>();
 	
-	private final String address;
-		
-	public MatcherBasedMockConnection(String address) {
-		this.address = address;
-	}
-
 	public InputStream getInputStream() throws IOException {
 		return new RedirectingInputStream(getOutputStream());
 	}
@@ -91,7 +85,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 					return matcher.getResponse();
 				}
 			}
-			throw new AssertionError("No matcher matches request "+request+" for address \""+address+"\". Do not know which response to return.");
+			throw new AssertionError("No matcher matches request "+request+". Do not know which response to return.");
 		}
 	}
 	
@@ -112,7 +106,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			}
 			else
 			{
-				throw new AssertionError("No more connections expected for \""+address+"\" and request matching matcher: "+matcher+".");
+				throw new AssertionError("No more connections expected for request matching matcher: "+matcher+".");
 			}
 		}
 

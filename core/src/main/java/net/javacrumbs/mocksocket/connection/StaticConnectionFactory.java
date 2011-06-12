@@ -17,8 +17,6 @@ package net.javacrumbs.mocksocket.connection;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.javacrumbs.mocksocket.MockSocketImplFactory;
 
@@ -28,7 +26,7 @@ import net.javacrumbs.mocksocket.MockSocketImplFactory;
  *
  */
 public class StaticConnectionFactory implements ConnectionFactory {
-	private static final Map<String, UniversalMockConnection> expectedConnections = new HashMap<String, UniversalMockConnection>();
+	private static UniversalMockConnection expectedConnection;
 	
 	public static void bootstrap()
 	{
@@ -40,39 +38,39 @@ public class StaticConnectionFactory implements ConnectionFactory {
 	}
 	
 	public synchronized Connection createConnection(String address) {
-		UniversalMockConnection connection = expectedConnections.get(address);
+		UniversalMockConnection connection = expectedConnection;
 		if (connection==null)
 		{
-			throw new IllegalStateException("Connection to address \""+address+"\" not expected.");
+			throw new IllegalStateException("Connection not expected. You have to call expectCall() first.");
 		}
 		connection.onCreate();
 		return connection;
 	}
 
-	public synchronized static UniversalMockRecorder expectCallTo(String address) {
-		if (connection(address)==null)
+	public synchronized static UniversalMockRecorder expectCall() {
+		if (getConnection()==null)
 		{
-			UniversalMockConnection mockConnection = new UniversalMockConnection(address);
-			addExpectedConnection(address, mockConnection);
+			UniversalMockConnection mockConnection = new UniversalMockConnection();
+			setExpectedConnection(mockConnection);
 			return mockConnection;
 		}
 		else
 		{
-			throw new IllegalArgumentException("Can not call expect twice with the same address. You have to call reset before each test. If you need simulate multiple requests to the same address, please call andReturn several times.");
+			throw new IllegalArgumentException("Can not call expectCall twice. You have to call reset before each test. If you need simulate multiple requests, please call andReturn several times.");
 		}
 	}
 
-	protected static void addExpectedConnection(String address, UniversalMockConnection mockConnection) {
-		expectedConnections.put(address, mockConnection);
+	protected static void setExpectedConnection(UniversalMockConnection mockConnection) {
+		expectedConnection = mockConnection;
 	}
 	
 	public synchronized static void reset()
 	{
-		expectedConnections.clear();
+		expectedConnection = null;
 	}
 
-	public synchronized static MockConnection connection(String address) {
-		return expectedConnections.get(address);
+	public synchronized static MockConnection getConnection() {
+		return expectedConnection;
 	}
 
 

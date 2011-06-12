@@ -15,7 +15,7 @@
  */
 package net.javacrumbs.mocksocket;
 
-import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.expectCallTo;
+import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.expectCall;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class MockSocketTest {
 
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
-		expectCallTo("localhost:80").andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
+		expectCall().andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet("http://localhost/");
@@ -56,7 +56,7 @@ public class MockSocketTest {
 
 	@Test
 	public void testUrl() throws ClientProtocolException, IOException {
-		expectCallTo("localhost:80").andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
+		expectCall().andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
 		URL url = new URL("http://localhost/");
 		System.out.println(printStream(url.openStream()));
 	}

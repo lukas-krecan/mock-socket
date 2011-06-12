@@ -15,10 +15,10 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.connection;
+import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.getConnection;
 import static net.javacrumbs.mocksocket.http.HttpMatchers.header;
 import static net.javacrumbs.mocksocket.http.HttpMatchers.method;
-import static net.javacrumbs.mocksocket.http.connection.HttpStaticConnectionFactory.expectCallTo;
+import static net.javacrumbs.mocksocket.http.connection.HttpStaticConnectionFactory.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -48,7 +48,7 @@ public class SampleTest {
 
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
-		expectCallTo("localhost:80")
+		expectCall()
 			.andWhenPayload(method(is("GET"))).thenReturn("HTTP/1.0 200 OK\n\nTest")
 			.andWhenPayload(method(is("POST"))).thenReturn("HTTP/1.0 404 Not Found\n");
 		
@@ -59,7 +59,7 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(connection("localhost:80").requestData(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 
 		HttpPost httppost = new HttpPost("http://localhost/");
@@ -69,7 +69,7 @@ public class SampleTest {
 	}
 	@Test
 	public void testHttpClientSequential() throws ClientProtocolException, IOException {
-		expectCallTo("localhost:80")
+		expectCall()
 		.andReturn("HTTP/1.0 200 OK\n\nTest")
 		.andReturn("HTTP/1.0 404 Not Found\n");
 		
@@ -80,7 +80,7 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(connection("localhost:80").requestData(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 		
 		HttpPost httppost = new HttpPost("http://localhost/");

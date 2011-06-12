@@ -32,9 +32,7 @@ import net.javacrumbs.mocksocket.connection.SocketData;
  */
 public class SequentialMockConnection extends AbstractMockConnection implements MockConnection, SequentialMockRecorder{
 	private final List<SocketData> responseData = new ArrayList<SocketData>();
-	private final String address;
-	public SequentialMockConnection(String address) {
-		this.address = address;
+	public SequentialMockConnection() {
 	}
 
 	public SequentialMockRecorder andReturn(SocketData data) {
@@ -49,7 +47,7 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		}
 		else
 		{
-			throw new AssertionError("No more connections expected to \""+address+"\".");
+			throw new AssertionError("No more connections expected.");
 		}
 	}
 }

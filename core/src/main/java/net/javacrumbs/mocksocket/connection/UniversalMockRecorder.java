@@ -21,7 +21,7 @@ import net.javacrumbs.mocksocket.connection.sequential.SequentialMockRecorder;
 import org.hamcrest.Matcher;
 
 /**
- * Can record both sequential nad matcher based mocks;
+ * Can record both sequential and matcher based mocks.
  * @author Lukas Krecan
  *
  */

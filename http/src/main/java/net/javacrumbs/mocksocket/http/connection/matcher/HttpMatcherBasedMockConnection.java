@@ -24,10 +24,6 @@ import org.hamcrest.Matcher;
 
 public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection implements MatcherBasedHttpMockRecorder{
 
-	public HttpMatcherBasedMockConnection(String address) {
-		super(address);
-	}
-
 	@Override
 	protected SocketData createSocketData(byte[] data) {
 		return new HttpData(data);

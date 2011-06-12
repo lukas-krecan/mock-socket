@@ -49,14 +49,14 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testExpectOne() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
+		StaticConnectionFactory.expectCall().andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA4));
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().size(), is(1));
-//		assertTrue(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA4)));
-//		assertFalse(StaticConnectionFactory.connection(ADDRESS1).containsRequestThat(is(DATA3)));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().size(), is(1));
+//		assertTrue(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA4)));
+//		assertFalse(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA3)));
 	}
 	
 	@Test(expected=IllegalStateException.class)
@@ -67,46 +67,36 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testExpectTwo() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2).andReturn(DATA1);
+		StaticConnectionFactory.expectCall().andReturn(DATA2).andReturn(DATA1);
 				
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA3));
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(1), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA3));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), is(DATA4));
 	}
 	@Test
 	public void testExpectTwoUniversal() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2).andReturn(DATA1);
+		StaticConnectionFactory.expectCall().andReturn(DATA2).andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA3));
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(1), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA3));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), is(DATA4));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2);
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
+		StaticConnectionFactory.expectCall().andReturn(DATA2);
+		StaticConnectionFactory.expectCall().andReturn(DATA1);
 	}
-	@Test
-	public void testExpectDifferentAddress() throws IOException
-	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1).andReturn(DATA2);
-		StaticConnectionFactory.expectCallTo(ADDRESS2).andReturn(DATA3).andReturn(DATA4);
-		
-		checkConnection(ADDRESS1,DATA1);
-		checkConnection(ADDRESS2,DATA3);
-		checkConnection(ADDRESS1,DATA2);
-		checkConnection(ADDRESS2,DATA4);
-	}
+
 	@Test
 	public void testMoreRequests() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
+		StaticConnectionFactory.expectCall().andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA1);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
@@ -117,7 +107,7 @@ public class StaticConnectionFactoryTest {
 		}
 		catch(AssertionError e)
 		{
-			assertThat(e.getMessage(), is("No more connections expected to \"localhost:1111\"."));
+			assertThat(e.getMessage(), is("No more connections expected."));
 		}
 	}
 
@@ -125,20 +115,20 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testWithPayload() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1)
+		StaticConnectionFactory.expectCall()
 			.andWhenPayload(is(DATA4)).thenReturn(DATA1)
 			.andWhenPayload(is(DATA3)).thenReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA4));
 	
 	}
 	@Test
 	public void testWithPayloadMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1)
+		StaticConnectionFactory.expectCall()
 			.andWhenPayload(is(DATA4)).thenReturn(DATA1).thenReturn(DATA3)
 			.andWhenPayload(is(DATA3)).thenReturn(DATA2);
 		
@@ -146,13 +136,13 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA3, DATA4);
 		
-		assertThat(StaticConnectionFactory.connection(ADDRESS1).requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA4));
 		
 	}
 	@Test
 	public void testUnexpected() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1)
+		StaticConnectionFactory.expectCall()
 			.andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
@@ -164,13 +154,13 @@ public class StaticConnectionFactoryTest {
 		}
 		catch(AssertionError e)
 		{
-			assertEquals("No matcher matches request [3, 3, 3, 3] for address \"localhost:1111\". Do not know which response to return.", e.getMessage());
+			assertEquals("No matcher matches request [3, 3, 3, 3]. Do not know which response to return.", e.getMessage());
 		}
 	}
 	@Test
 	public void testUnexpectedMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCallTo(ADDRESS1).andWhenPayload(is(DATA4)).thenReturn(DATA1);
+		StaticConnectionFactory.expectCall().andWhenPayload(is(DATA4)).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
 		connection.getOutputStream().write(DATA4.getBytes());
@@ -181,7 +171,7 @@ public class StaticConnectionFactoryTest {
 		}
 		catch(AssertionError e)
 		{
-			assertTrue(e.getMessage().startsWith("No more connections expected for \"localhost:1111\" and request matching matcher: "));
+			assertTrue(e.getMessage().startsWith("No more connections expected for request matching matcher: "));
 		}
 	}
 	

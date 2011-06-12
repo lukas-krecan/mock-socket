@@ -22,10 +22,6 @@ import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 public class HttpSequentialMockConnection extends SequentialMockConnection implements SequentialHttpMockRecorder{
 
-	public HttpSequentialMockConnection(String address) {
-		super(address);
-	}
-	
 	@Override
 	protected SocketData createSocketData(byte[] data) {
 		return new HttpData(data);

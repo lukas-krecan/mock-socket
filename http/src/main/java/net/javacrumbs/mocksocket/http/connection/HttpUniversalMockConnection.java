@@ -28,19 +28,15 @@ import net.javacrumbs.mocksocket.http.connection.sequential.SequentialHttpMockRe
 import org.hamcrest.Matcher;
 
 public class HttpUniversalMockConnection extends UniversalMockConnection implements UniversalHttpMockRecorder{
-
-	public HttpUniversalMockConnection(String address) {
-		super(address);
-	}
 	
 	@Override
 	protected MatcherBasedMockConnection createMatcherBasedConnection() {
-		return new HttpMatcherBasedMockConnection(getAddress());
+		return new HttpMatcherBasedMockConnection();
 	}
 	
 	@Override
 	protected SequentialMockConnection createSequentialConnection() {
-		return new HttpSequentialMockConnection(getAddress());
+		return new HttpSequentialMockConnection();
 	}
 	
 	public SequentialHttpMockRecorder andReturn(String data){
