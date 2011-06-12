@@ -16,8 +16,9 @@
 
 package net.javacrumbs.mocksocket.http.connection;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.UniversalMockConnection;
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
 import net.javacrumbs.mocksocket.http.connection.matcher.HttpMatcherBasedMockConnection;
@@ -49,7 +50,7 @@ public class HttpUniversalMockConnection extends UniversalMockConnection impleme
 	}
 	
 	@Override
-	public MatcherBasedHttpMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
-		return (MatcherBasedHttpMockResultRecorder)super.andWhenPayload(matcher);
+	public MatcherBasedHttpMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher) {
+		return (MatcherBasedHttpMockResultRecorder)super.andWhenRequest(matcher);
 	}
 }

@@ -18,14 +18,14 @@ package net.javacrumbs.mocksocket.http.connection;
 
 import java.io.UnsupportedEncodingException;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 
 /**
  * Represents socket data.
  * @author Lukas Krecan
  *
  */
-public class HttpData extends SocketData {
+public class HttpData extends DefaultSocketData {
 	private static final String UTF8 = "UTF-8";
 	
 	private final String charset;

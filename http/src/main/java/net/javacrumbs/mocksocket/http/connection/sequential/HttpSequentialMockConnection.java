@@ -16,17 +16,18 @@
 
 package net.javacrumbs.mocksocket.http.connection.sequential;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.OutputSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
 import net.javacrumbs.mocksocket.http.connection.HttpData;
+import net.javacrumbs.mocksocket.http.connection.HttpOutputData;
 
 public class HttpSequentialMockConnection extends SequentialMockConnection implements SequentialHttpMockRecorder{
 
 	@Override
-	protected SocketData createSocketData(byte[] data) {
-		return new HttpData(data);
+	protected OutputSocketData createRequestSocket(String address) {
+		return new HttpOutputData(address);
 	}
-	
 	@Override
 	public SequentialHttpMockRecorder andReturn(SocketData data) {
 		return (SequentialHttpMockRecorder) super.andReturn(data);

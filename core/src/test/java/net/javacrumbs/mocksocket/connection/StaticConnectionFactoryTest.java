@@ -16,6 +16,7 @@
 package net.javacrumbs.mocksocket.connection;
 
 
+import static net.javacrumbs.mocksocket.SocketMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,6 +25,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
+import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 import org.junit.After;
 import org.junit.Test;
@@ -34,10 +38,10 @@ public class StaticConnectionFactoryTest {
 
 	private static final String ADDRESS1 = "localhost:1111";
 	private static final String ADDRESS2 = "localhost:2222";
-	private static final SocketData DATA1 = new SocketData(new byte[]{1,1,1,1});
-	private static final SocketData DATA2 = new SocketData(new byte[]{2,2,2,2});
-	private static final SocketData DATA3 = new SocketData(new byte[]{3,3,3,3});
-	private static final SocketData DATA4 = new SocketData(new byte[]{4,4,4,4});
+	private static final SocketData DATA1 = new DefaultSocketData(new byte[]{1,1,1,1});
+	private static final SocketData DATA2 = new DefaultSocketData(new byte[]{2,2,2,2});
+	private static final SocketData DATA3 = new DefaultSocketData(new byte[]{3,3,3,3});
+	private static final SocketData DATA4 = new DefaultSocketData(new byte[]{4,4,4,4});
 	private StaticConnectionFactory connectionFactory  = new StaticConnectionFactory();
 
 	@After
@@ -53,7 +57,7 @@ public class StaticConnectionFactoryTest {
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
 		assertThat(StaticConnectionFactory.getConnection().requestData().size(), is(1));
 //		assertTrue(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA4)));
 //		assertFalse(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA3)));
@@ -72,8 +76,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA3));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA3.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(1).getBytes(), is(DATA4.getBytes()));
 	}
 	@Test
 	public void testExpectTwoUniversal() throws IOException
@@ -83,8 +87,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA3));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA3.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(1).getBytes(), is(DATA4.getBytes()));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
@@ -116,34 +120,47 @@ public class StaticConnectionFactoryTest {
 	public void testWithPayload() throws IOException
 	{
 		StaticConnectionFactory.expectCall()
-			.andWhenPayload(is(DATA4)).thenReturn(DATA1)
-			.andWhenPayload(is(DATA3)).thenReturn(DATA2);
+			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1)
+			.andWhenRequest(data(is(DATA3.getBytes()))).thenReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
 	
+	}
+	@Test
+	public void testWithAddress() throws IOException
+	{
+		StaticConnectionFactory.expectCall()
+		.andWhenRequest(address(is(ADDRESS1))).thenReturn(DATA1)
+		.andWhenRequest(address(is(ADDRESS2))).thenReturn(DATA2);
+		
+		checkConnection(ADDRESS1,DATA1, DATA4);
+		checkConnection(ADDRESS2,DATA2, DATA3);
+		
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		
 	}
 	@Test
 	public void testWithPayloadMultiple() throws IOException
 	{
 		StaticConnectionFactory.expectCall()
-			.andWhenPayload(is(DATA4)).thenReturn(DATA1).thenReturn(DATA3)
-			.andWhenPayload(is(DATA3)).thenReturn(DATA2);
+			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1).thenReturn(DATA3)
+			.andWhenRequest(data(is(DATA3.getBytes()))).thenReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA3, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), is(DATA4));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
 		
 	}
 	@Test
 	public void testUnexpected() throws IOException
 	{
 		StaticConnectionFactory.expectCall()
-			.andWhenPayload(is(DATA4)).thenReturn(DATA1);
+			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
 		connection.getOutputStream().write(DATA3.getBytes());
@@ -160,7 +177,7 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testUnexpectedMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andWhenPayload(is(DATA4)).thenReturn(DATA1);
+		StaticConnectionFactory.expectCall().andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
 		connection.getOutputStream().write(DATA4.getBytes());
@@ -186,6 +203,6 @@ public class StaticConnectionFactoryTest {
 			connection.getOutputStream().write(inData.getBytes());
 		}
 		byte[] actualOutData = FileCopyUtils.copyToByteArray(connection.getInputStream());
-		assertThat(new SocketData(actualOutData), is(outData));	
+		assertThat(actualOutData, is(outData.getBytes()));	
 	}
 }

@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
@@ -46,9 +48,9 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return new SequentialMockConnection();
 	}
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
+	public MatcherBasedMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher) {
 		MatcherBasedMockConnection connection = createMatcherBasedConnection();
-		connection.andWhenPayload(matcher);
+		connection.andWhenRequest(matcher);
 		wrappedConnection = connection;
 		return connection;
 	}
@@ -57,8 +59,8 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return new MatcherBasedMockConnection();
 	}
 
-	public void onCreate() {
-		wrappedConnection.onCreate();
+	public void onCreate(String address) {
+		wrappedConnection.onCreate(address);
 	}
 
 	public InputStream getInputStream() throws IOException {
@@ -69,7 +71,7 @@ public class UniversalMockConnection implements UniversalMockRecorder, MockConne
 		return wrappedConnection.getOutputStream();
 	}
 
-	public List<SocketData> requestData() {
+	public List<RequestSocketData> requestData() {
 		return wrappedConnection.requestData();
 	}
 }

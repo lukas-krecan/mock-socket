@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.http.connection;
+package net.javacrumbs.mocksocket;
 
-import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
-import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.http.connection.matcher.MatcherBasedHttpMockResultRecorder;
-import net.javacrumbs.mocksocket.http.connection.sequential.SequentialHttpMockRecorder;
+import net.javacrumbs.mocksocket.matchers.AddressMatcher;
+import net.javacrumbs.mocksocket.matchers.DataMatcher;
 
 import org.hamcrest.Matcher;
+import org.junit.internal.matchers.CombinableMatcher;
 
-public interface UniversalHttpMockRecorder extends UniversalMockRecorder {
-	SequentialHttpMockRecorder andReturn(SocketData data);
-	
-	SequentialHttpMockRecorder andReturn(String data);
-	
-	MatcherBasedHttpMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher);
+public class SocketMatchers {
+	protected SocketMatchers()
+	{
+		
+	}
+
+	public static Matcher<RequestSocketData> data(Matcher<byte[]> dataMatcher)
+	{
+		return new CombinableMatcher<RequestSocketData>(new DataMatcher(dataMatcher));
+	}
+	public static Matcher<RequestSocketData> address(Matcher<String> addressMatcher)
+	{
+		return new CombinableMatcher<RequestSocketData>(new AddressMatcher(addressMatcher));
+	}
 }

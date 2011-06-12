@@ -15,6 +15,8 @@
  */
 package net.javacrumbs.mocksocket.connection;
 
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockRecorder;
 
@@ -28,5 +30,5 @@ import org.hamcrest.Matcher;
 public interface UniversalMockRecorder {
 	public SequentialMockRecorder andReturn(SocketData data);
 	
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher);
+	public MatcherBasedMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher);
 }

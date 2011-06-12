@@ -15,7 +15,7 @@
  */
 package net.javacrumbs.mocksocket.connection.matcher;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 public interface MatcherBasedMockResultRecorder {
 

@@ -15,9 +15,8 @@
  */
 package net.javacrumbs.mocksocket.http.matchers;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.http.HttpParser;
-import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -51,7 +50,7 @@ public abstract class AbstractHttpMatcher extends BaseMatcher<SocketData> {
 	protected abstract Object getValue(HttpParser httpParser);
 
 	public void describeMismatch(Object item, Description description) {
-    	description.appendText("was ").appendValue(describeValue(createHttpParser((HttpData)item)));
+    	description.appendText("was ").appendValue(describeValue(createHttpParser((SocketData)item)));
     }
 
 

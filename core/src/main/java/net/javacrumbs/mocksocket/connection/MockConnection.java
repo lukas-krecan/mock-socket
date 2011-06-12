@@ -17,6 +17,8 @@ package net.javacrumbs.mocksocket.connection;
 
 import java.util.List;
 
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+
 public interface MockConnection extends Connection {
-	public List<SocketData> requestData();
+	public List<RequestSocketData> requestData();
 }

@@ -16,8 +16,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-api</artifactId>
-			<version>1.0</version>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

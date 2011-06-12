@@ -15,7 +15,8 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.SocketMatchers;
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.http.matchers.ContentMatcher;
 import net.javacrumbs.mocksocket.http.matchers.HeaderMatcher;
 import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
@@ -24,27 +25,26 @@ import net.javacrumbs.mocksocket.http.matchers.StatusMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.CombinableMatcher;
 
-public class HttpMatchers {
+public class HttpMatchers extends SocketMatchers{
 	
-	
-	private HttpMatchers()
+	protected HttpMatchers()
 	{
 	}
 	
-	public static CombinableMatcher<SocketData> status(Matcher<Integer> statusMatcher) {
-		return new CombinableMatcher<SocketData>(new StatusMatcher(statusMatcher));
+	public static CombinableMatcher<RequestSocketData> status(Matcher<Integer> statusMatcher) {
+		return new CombinableMatcher<RequestSocketData>(new StatusMatcher(statusMatcher));
 	}
 
-	public static CombinableMatcher<SocketData> header(String header, Matcher<String> headerMatcher) {
-		return new CombinableMatcher<SocketData>(new HeaderMatcher(header, headerMatcher));
+	public static CombinableMatcher<RequestSocketData> header(String header, Matcher<String> headerMatcher) {
+		return new CombinableMatcher<RequestSocketData>(new HeaderMatcher(header, headerMatcher));
 	}
 	
-	public static CombinableMatcher<SocketData> content(Matcher<String> contentMatcher) {
-		return new CombinableMatcher<SocketData>(new ContentMatcher(contentMatcher));
+	public static CombinableMatcher<RequestSocketData> content(Matcher<String> contentMatcher) {
+		return new CombinableMatcher<RequestSocketData>(new ContentMatcher(contentMatcher));
 	}
 
-	public static CombinableMatcher<SocketData> method(Matcher<String> methodMatcher) {
-		return new CombinableMatcher<SocketData>(new MethodMatcher(methodMatcher));
+	public static CombinableMatcher<RequestSocketData> method(Matcher<String> methodMatcher) {
+		return new CombinableMatcher<RequestSocketData>(new MethodMatcher(methodMatcher));
 	}
 
 

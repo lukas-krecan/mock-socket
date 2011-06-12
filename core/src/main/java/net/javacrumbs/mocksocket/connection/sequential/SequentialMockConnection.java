@@ -23,7 +23,7 @@ import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
 import net.javacrumbs.mocksocket.connection.MockConnection;
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 /**
  * Mock connection. Can simulate multiple requests to the same address.

@@ -23,8 +23,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
+import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -35,6 +35,8 @@ import org.junit.After;
 import org.junit.Test;
 
 public class MockSocketTest {
+	private static final String ADDRESS = "http://localhost/";
+
 	static {
 		StaticConnectionFactory.bootstrap();
 	}
@@ -46,18 +48,18 @@ public class MockSocketTest {
 
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
-		expectCall().andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
+		expectCall().andReturn(new DefaultSocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
 		
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httpget = new HttpGet("http://localhost/");
+		HttpGet httpget = new HttpGet(ADDRESS);
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println(printStream(response.getEntity().getContent()));
 	}
 
 	@Test
 	public void testUrl() throws ClientProtocolException, IOException {
-		expectCall().andReturn(new SocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
-		URL url = new URL("http://localhost/");
+		expectCall().andReturn(new DefaultSocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
+		URL url = new URL(ADDRESS);
 		System.out.println(printStream(url.openStream()));
 	}
 

@@ -19,7 +19,7 @@ package net.javacrumbs.mocksocket.http;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.http.connection.HttpData;
 
 import org.eclipse.jetty.testing.HttpTester;

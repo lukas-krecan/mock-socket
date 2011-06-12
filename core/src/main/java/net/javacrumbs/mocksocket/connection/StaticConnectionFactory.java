@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.net.Socket;
 
 import net.javacrumbs.mocksocket.MockSocketImplFactory;
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.matchers.DataMatcher;
+
+import org.hamcrest.Matcher;
+import org.junit.internal.matchers.CombinableMatcher;
 
 /**
  * Stores connections in a static field.
@@ -43,7 +48,7 @@ public class StaticConnectionFactory implements ConnectionFactory {
 		{
 			throw new IllegalStateException("Connection not expected. You have to call expectCall() first.");
 		}
-		connection.onCreate();
+		connection.onCreate(address);
 		return connection;
 	}
 
@@ -59,6 +64,7 @@ public class StaticConnectionFactory implements ConnectionFactory {
 			throw new IllegalArgumentException("Can not call expectCall twice. You have to call reset before each test. If you need simulate multiple requests, please call andReturn several times.");
 		}
 	}
+	
 
 	protected static void setExpectedConnection(UniversalMockConnection mockConnection) {
 		expectedConnection = mockConnection;

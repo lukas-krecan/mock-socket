@@ -16,7 +16,7 @@
 
 package net.javacrumbs.mocksocket.http.connection.sequential;
 
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockRecorder;
 
 /**

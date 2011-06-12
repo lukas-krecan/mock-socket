@@ -16,7 +16,7 @@
 package net.javacrumbs.mocksocket.http;
 
 import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.getConnection;
-import static net.javacrumbs.mocksocket.http.HttpMatchers.header;
+import static net.javacrumbs.mocksocket.http.HttpMatchers.*;
 import static net.javacrumbs.mocksocket.http.HttpMatchers.method;
 import static net.javacrumbs.mocksocket.http.connection.HttpStaticConnectionFactory.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,6 +37,7 @@ import org.junit.After;
 import org.junit.Test;
 
 public class SampleTest {
+	private static final String ADDRESS = "http://localhost/";
 	static {
 		StaticConnectionFactory.bootstrap();
 	}
@@ -49,12 +50,12 @@ public class SampleTest {
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
 		expectCall()
-			.andWhenPayload(method(is("GET"))).thenReturn("HTTP/1.0 200 OK\n\nTest")
-			.andWhenPayload(method(is("POST"))).thenReturn("HTTP/1.0 404 Not Found\n");
+			.andWhenRequest(method(is("POST")).and(address(is("localhost:80")))).thenReturn("HTTP/1.0 404 Not Found\n")
+			.andWhenRequest(method(is("GET"))).thenReturn("HTTP/1.0 200 OK\n\nTest");
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
-		HttpGet httpget = new HttpGet("http://localhost/");
+		HttpGet httpget = new HttpGet(ADDRESS);
 		httpget.addHeader("Accept","text/plain");
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
@@ -62,7 +63,7 @@ public class SampleTest {
 		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 
-		HttpPost httppost = new HttpPost("http://localhost/");
+		HttpPost httppost = new HttpPost(ADDRESS);
 		HttpResponse postResponse = httpclient.execute(httppost);
 		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));
 		httppost.abort();
@@ -75,7 +76,7 @@ public class SampleTest {
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
-		HttpGet httpget = new HttpGet("http://localhost/");
+		HttpGet httpget = new HttpGet(ADDRESS);
 		httpget.addHeader("Accept","text/plain");
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
@@ -83,7 +84,7 @@ public class SampleTest {
 		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 		
-		HttpPost httppost = new HttpPost("http://localhost/");
+		HttpPost httppost = new HttpPost(ADDRESS);
 		HttpResponse postResponse = httpclient.execute(httppost);
 		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));
 		httppost.abort();

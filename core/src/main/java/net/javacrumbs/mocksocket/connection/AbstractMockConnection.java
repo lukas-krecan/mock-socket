@@ -15,10 +15,14 @@
  */
 package net.javacrumbs.mocksocket.connection;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.javacrumbs.mocksocket.connection.data.OutputSocketData;
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 import org.hamcrest.Matcher;
 
@@ -30,28 +34,28 @@ import org.hamcrest.Matcher;
  */
 public abstract class AbstractMockConnection implements MockConnection{
 
-	private final List<ByteArrayOutputStream> requestData = new ArrayList<ByteArrayOutputStream>();
+	private final List<OutputSocketData> requestData = new ArrayList<OutputSocketData>();
 	protected int actualConnection = -1;
-
-	public void onCreate() {
+	
+	public void onCreate(String address) {
 		actualConnection++;
-		requestData.add(new ByteArrayOutputStream());
+		requestData.add(createRequestSocket(address));
 	}
 
-	public ByteArrayOutputStream getOutputStream() throws IOException {
+	protected OutputSocketData createRequestSocket(String address) {
+		return new OutputSocketData(address);
+	}
+
+	public OutputStream getOutputStream() throws IOException {
+		return getRequestSocketData().getOutputStream();
+	}
+
+	protected OutputSocketData getRequestSocketData() {
 		return requestData.get(actualConnection);
 	}
 	
-	public List<SocketData> requestData() {
-		List<SocketData> result = new ArrayList<SocketData>();
-		for (ByteArrayOutputStream data : requestData) {
-			result.add(createSocketData(data.toByteArray()));
-		}
-		return result;
-	}
-
-	protected SocketData createSocketData(byte[] data) {
-		return new SocketData(data);
+	public List<RequestSocketData> requestData() {
+		return new ArrayList<RequestSocketData>(requestData);
 	}
 
 	protected int getActualConnection() {
@@ -62,9 +66,9 @@ public abstract class AbstractMockConnection implements MockConnection{
 		this.actualConnection = actualConnection;
 	}
 	
-	public boolean containsRequestThat(Matcher<? extends Object> matcher){
-		for (ByteArrayOutputStream data : requestData) {
-			if (matcher.matches(data.toByteArray()))
+	public boolean containsRequestThat(Matcher<RequestSocketData> matcher){
+		for (SocketData data : requestData) {
+			if (matcher.matches(data))
 			{
 				return true;
 			}

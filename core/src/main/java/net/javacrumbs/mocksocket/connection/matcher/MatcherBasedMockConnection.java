@@ -16,7 +16,6 @@
 package net.javacrumbs.mocksocket.connection.matcher;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,7 +23,8 @@ import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
 import net.javacrumbs.mocksocket.connection.MockConnection;
-import net.javacrumbs.mocksocket.connection.SocketData;
+import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 import org.hamcrest.Matcher;
 
@@ -38,7 +38,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	private final List<MatcherWithData> matchers = new ArrayList<MatcherWithData>();
 	
 	public InputStream getInputStream() throws IOException {
-		return new RedirectingInputStream(getOutputStream());
+		return new RedirectingInputStream(getRequestSocketData());
 	}
 
 	public MatcherBasedMockRecorder thenReturn(SocketData data) {
@@ -47,7 +47,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	}
 
 
-	public MatcherBasedMockResultRecorder andWhenPayload(Matcher<SocketData> matcher) {
+	public MatcherBasedMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher) {
 		matchers.add(new MatcherWithData(matcher));
 		return this;
 	}
@@ -60,12 +60,12 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 	 */
 	class RedirectingInputStream extends InputStream
 	{
-		private final ByteArrayOutputStream outputStream;
+		private final RequestSocketData requestSocketData;
 		private InputStream wrappedInputStream;
 		
-		public RedirectingInputStream(ByteArrayOutputStream outputStream)
+		public RedirectingInputStream(RequestSocketData requestSocketData)
 		{
-			this.outputStream = outputStream;
+			this.requestSocketData = requestSocketData;
 		}
 
 		@Override
@@ -78,24 +78,23 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 		}
 
 		private InputStream findInputStream() throws IOException, AssertionError {
-			SocketData request = createSocketData(outputStream.toByteArray());
 			for (MatcherWithData matcher : matchers) {
-				if (matcher.getMatcher().matches(request))
+				if (matcher.getMatcher().matches(requestSocketData))
 				{
 					return matcher.getResponse();
 				}
 			}
-			throw new AssertionError("No matcher matches request "+request+". Do not know which response to return.");
+			throw new AssertionError("No matcher matches request "+requestSocketData+". Do not know which response to return.");
 		}
 	}
 	
 	protected class MatcherWithData
 	{
-		private final Matcher<SocketData> matcher;
+		private final Matcher<RequestSocketData> matcher;
 		private final List<SocketData> responseData = new ArrayList<SocketData>();
 		private int actualResponse = 0;		
 		
-		public MatcherWithData(Matcher<SocketData> matcher) {
+		public MatcherWithData(Matcher<RequestSocketData> matcher) {
 			this.matcher = matcher;
 		}
 		
@@ -115,7 +114,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			responseData.add(data);
 		}
 		
-		public Matcher<? extends Object> getMatcher() {
+		public Matcher<RequestSocketData> getMatcher() {
 			return matcher;
 		}
 		

@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.http.connection.matcher;
+package net.javacrumbs.mocksocket.http.connection;
 
-import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
+import java.io.UnsupportedEncodingException;
 
-public interface MatcherBasedHttpMockResultRecorder extends MatcherBasedMockResultRecorder {
-	MatcherBasedHttpMockRecorder thenReturn(SocketData data);
+import net.javacrumbs.mocksocket.connection.data.OutputSocketData;
 
-	MatcherBasedHttpMockRecorder thenReturn(String data);
+public class HttpOutputData extends OutputSocketData {
+
+	public HttpOutputData(String address) {
+		super(address);
+	}
+	
+	@Override
+	public String toString() {
+		return "address: "+getAddress()+"\ndata:\n"+getDataAsString();
+	}
+
+	private String getDataAsString() {
+		try {
+			return new String(getBytes(),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return new String(getBytes());
+		}
+	}
+
 }
