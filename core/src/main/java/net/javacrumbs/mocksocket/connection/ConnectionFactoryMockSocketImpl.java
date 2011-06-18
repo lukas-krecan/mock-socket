@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import net.javacrumbs.mocksocket.AbstractMockSocketImpl;
+import net.javacrumbs.mocksocket.socket.AbstractMockSocketImpl;
 
 /**
  * MockSocket impl that uses a {@link ConnectionFactory}. 

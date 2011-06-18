@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketImplFactory;
 
-import net.javacrumbs.mocksocket.MockSocketImplFactory;
+import net.javacrumbs.mocksocket.socket.MockSocketImplFactory;
 
 
 /**

@@ -38,23 +38,45 @@ public class MockSocket {
 		
 	}
 	
+	/**
+	 * Prepares mock socket to be trained.
+	 * @return
+	 */
 	public synchronized static UniversalMockRecorder expectCall() {
 		return StaticConnectionFactory.expectCall();
 	}
 	
+	/**
+	 * To be called after each test.
+	 */
 	public static void reset()
 	{
 		StaticConnectionFactory.reset();
 	}
 	
+	/**
+	 * Returns {@link MockConnection}.
+	 * @return
+	 */
 	public synchronized static MockConnection getConnection() {
 		return StaticConnectionFactory.getConnection();
 	}
 
+	/**
+	 * Matcher that can compare data.
+	 * @param dataMatcher
+	 * @return
+	 */
 	public static Matcher<RequestSocketData> data(Matcher<byte[]> dataMatcher)
 	{
 		return new CombinableMatcher<RequestSocketData>(new DataMatcher(dataMatcher));
 	}
+	
+	/**
+	 * Matcher thac can compare address.
+	 * @param addressMatcher
+	 * @return
+	 */
 	public static Matcher<RequestSocketData> address(Matcher<String> addressMatcher)
 	{
 		return new CombinableMatcher<RequestSocketData>(new AddressMatcher(addressMatcher));

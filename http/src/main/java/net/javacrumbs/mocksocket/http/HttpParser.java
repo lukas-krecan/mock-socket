@@ -20,28 +20,26 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.http.connection.HttpData;
 
+import org.eclipse.jetty.http.HttpHeaders;
+import org.eclipse.jetty.http.MimeTypes;
+import org.eclipse.jetty.io.Buffer;
+import org.eclipse.jetty.io.ByteArrayBuffer;
+import org.eclipse.jetty.io.View;
 import org.eclipse.jetty.testing.HttpTester;
+import org.eclipse.jetty.util.ByteArrayOutputStream2;
 
 public class HttpParser  {
 	private final HttpTester httpTester;
 	
 	public HttpParser(SocketData data) {
-		if (data instanceof HttpData)
-		{
-			httpTester = createTester((HttpData)data);
-		}
-		else
-		{
-			httpTester = createTester(new HttpData(data.getBytes()));
-		}
+		httpTester = createTester(data.getBytes());
 	}
 
-	private HttpTester createTester(HttpData httpData) {
-		HttpTester httpTester = new HttpTester(httpData.getCharset());	
+	private HttpTester createTester(byte[] data) {
+		ExtendedHttpTester httpTester = new ExtendedHttpTester();	
 		try {
-			httpTester.parse(httpData.getAsString());
+			httpTester.parse(data);
 			return httpTester;
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Can not parse data",e);
@@ -100,6 +98,106 @@ public class HttpParser  {
 
 	public String getContent() {
 		return httpTester.getContent();
+	}
+	
+	/**
+	 * HttpTester that can parse byte[].
+	 * @author Lukas Krecan
+	 *
+	 */
+	private static class ExtendedHttpTester extends HttpTester
+	{
+		private String _charset;
+		
+
+		public String parse(byte[] data) throws IOException {
+	        ByteArrayBuffer buf = new ByteArrayBuffer(data);
+	        View view = new View(buf);
+	        org.eclipse.jetty.http.HttpParser parser = new org.eclipse.jetty.http.HttpParser(view,new PH());
+	        parser.parse();
+	        return getString(view.asArray());
+		}
+		
+		private String getString(Buffer buffer)
+	    {
+	        return getString(buffer.asArray());
+	    }
+	    
+	    private String getString(byte[] b)
+	    {
+	        if(_charset==null)
+	            return new String(b);
+	        try
+	        {
+	            return new String(b, _charset);
+	        }
+	        catch(Exception e)
+	        {
+	            return new String(b);
+	        }
+	     }
+		@Override
+		public String getContentType() {
+			return getString(_fields.get(HttpHeaders.CONTENT_TYPE_BUFFER));
+		}
+		
+	    public String getContent()
+	    {
+	        if (_parsedContent!=null)
+	            return getString(_parsedContent.toByteArray());
+	        if (_genContent!=null)
+	            return getString(_genContent);
+	        return null;
+	    }
+		
+	    private class PH extends org.eclipse.jetty.http.HttpParser.EventHandler
+	    {
+	        public void startRequest(Buffer method, Buffer url, Buffer version) throws IOException
+	        {
+	            reset();
+	            _method=getString(method);
+	            _uri=getString(url);
+	            _version=getString(version);
+	        }
+
+	        public void startResponse(Buffer version, int status, Buffer reason) throws IOException
+	        {
+	            reset();
+	            _version=getString(version);
+	            _status=status;
+	            _reason=getString(reason);
+	        }
+	        
+	        public void parsedHeader(Buffer name, Buffer value) throws IOException
+	        {
+	            _fields.add(name,value);
+	        }
+
+	        public void headerComplete() throws IOException
+	        {
+	            Buffer contentType = _fields.get(HttpHeaders.CONTENT_TYPE_BUFFER);
+	            if(contentType!=null)
+	            {
+	                String charset = MimeTypes.getCharsetFromContentType(contentType);
+	                if(charset!=null)
+	                {
+	                    _charset = charset;
+	                }
+	            }
+	        }
+
+	        public void messageComplete(long contextLength) throws IOException
+	        {
+	        }
+	        
+	        public void content(Buffer ref) throws IOException
+	        {
+	            if (_parsedContent==null)
+	                _parsedContent=new ByteArrayOutputStream2();
+	            _parsedContent.write(ref.asArray());
+	        }
+	    }
+		
 	}
 
 
