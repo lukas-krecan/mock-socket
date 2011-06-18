@@ -24,7 +24,8 @@ import net.javacrumbs.mocksocket.matchers.AddressMatcher;
 import net.javacrumbs.mocksocket.matchers.DataMatcher;
 
 import org.hamcrest.Matcher;
-import org.junit.internal.matchers.CombinableMatcher;
+import org.hamcrest.core.CombinableMatcher;
+
 
 /**
  * Main class of mock socket to be statically imported tou your test.
