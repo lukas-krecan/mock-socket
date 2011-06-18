@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>net.javacrumbs</groupId>
 		<artifactId>mock-socket-parent</artifactId>
-		<version>0.6</version>
+		<version>0.7-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>net.javacrumbs</groupId>
 	<artifactId>mock-socket-core</artifactId>
-	<version>0.6</version>
+	<version>0.7-SNAPSHOT</version>
 	<name>mock-socket-core</name>
 
 	<dependencies>
