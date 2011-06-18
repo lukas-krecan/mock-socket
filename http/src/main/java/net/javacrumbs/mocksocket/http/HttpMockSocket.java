@@ -15,8 +15,10 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import net.javacrumbs.mocksocket.SocketMatchers;
+import net.javacrumbs.mocksocket.MockSocket;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.http.connection.HttpStaticConnectionFactory;
+import net.javacrumbs.mocksocket.http.connection.UniversalHttpMockRecorder;
 import net.javacrumbs.mocksocket.http.matchers.ContentMatcher;
 import net.javacrumbs.mocksocket.http.matchers.HeaderMatcher;
 import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
@@ -25,10 +27,19 @@ import net.javacrumbs.mocksocket.http.matchers.StatusMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.CombinableMatcher;
 
-public class HttpMatchers extends SocketMatchers{
+public class HttpMockSocket extends MockSocket{
 	
-	protected HttpMatchers()
+	protected HttpMockSocket()
 	{
+	}
+	
+	public static HttpResponseGenerator response()
+	{
+		return new HttpResponseGenerator();
+	}
+	
+	public static UniversalHttpMockRecorder expectCall() {
+		return HttpStaticConnectionFactory.expectCall();
 	}
 	
 	public static CombinableMatcher<RequestSocketData> status(Matcher<Integer> statusMatcher) {

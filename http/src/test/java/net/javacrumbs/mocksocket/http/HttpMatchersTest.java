@@ -15,9 +15,9 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import static net.javacrumbs.mocksocket.http.HttpMatchers.content;
-import static net.javacrumbs.mocksocket.http.HttpMatchers.header;
-import static net.javacrumbs.mocksocket.http.HttpMatchers.status;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.content;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.header;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.status;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;

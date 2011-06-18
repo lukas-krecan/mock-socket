@@ -15,14 +15,17 @@
  */
 package net.javacrumbs.mocksocket.http;
 
-import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.getConnection;
-import static net.javacrumbs.mocksocket.http.HttpMatchers.*;
-import static net.javacrumbs.mocksocket.http.HttpMatchers.method;
-import static net.javacrumbs.mocksocket.http.connection.HttpStaticConnectionFactory.*;
+import static net.javacrumbs.mocksocket.MockSocket.address;
+import static net.javacrumbs.mocksocket.MockSocket.getConnection;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.expectCall;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.header;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.method;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.response;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
@@ -38,9 +41,7 @@ import org.junit.Test;
 
 public class SampleTest {
 	private static final String ADDRESS = "http://localhost/";
-	static {
-		StaticConnectionFactory.bootstrap();
-	}
+
 	@After
 	public void reset()
 	{
@@ -50,8 +51,8 @@ public class SampleTest {
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
 		expectCall()
-			.andWhenRequest(method(is("POST")).and(address(is("localhost:80")))).thenReturn("HTTP/1.0 404 Not Found\n")
-			.andWhenRequest(method(is("GET"))).thenReturn("HTTP/1.0 200 OK\n\nTest");
+			.andWhenRequest(method(is("POST")).and(address(is("localhost:80")))).thenReturn(response().withStatus(404))
+			.andWhenRequest(method(is("GET"))).thenReturn(response().withStatus(200).withContent("Text"));
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
@@ -61,6 +62,9 @@ public class SampleTest {
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
 		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
+		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+		getResponse.getEntity().writeTo(outstream);
+		assertThat(new String(outstream.toByteArray()), is("Text"));
 		httpget.abort();
 
 		HttpPost httppost = new HttpPost(ADDRESS);

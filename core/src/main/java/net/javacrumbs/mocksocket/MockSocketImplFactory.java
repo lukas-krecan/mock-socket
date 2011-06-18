@@ -18,15 +18,18 @@ package net.javacrumbs.mocksocket;
 import java.net.SocketImpl;
 import java.net.SocketImplFactory;
 
+import net.javacrumbs.mocksocket.connection.ConnectionFactory;
+import net.javacrumbs.mocksocket.connection.ConnectionFactoryMockSocketImpl;
+
 public class MockSocketImplFactory implements SocketImplFactory {
-	private final SocketImpl mockSocket;
+	private final ConnectionFactory connectionFactory;
 	
-	public MockSocketImplFactory(SocketImpl mockSocket) {
-		this.mockSocket = mockSocket;
+	public MockSocketImplFactory(ConnectionFactory connectionFactory) {
+		this.connectionFactory = connectionFactory;
 	}
 
 	public SocketImpl createSocketImpl() {
-		return mockSocket;
+		return new ConnectionFactoryMockSocketImpl(connectionFactory);
 	}
 
 }

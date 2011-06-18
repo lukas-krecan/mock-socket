@@ -16,14 +16,21 @@
 
 package net.javacrumbs.mocksocket.http;
 
-import org.junit.Test;
+public class HttpGeneratorException extends RuntimeException {
+
+	private static final long serialVersionUID = 8538152722978567179L;
 
 
-public class HttpGeneratorTest {
-
-	@Test
-	public void testGenerateResponse()
-	{
-		
+	public HttpGeneratorException(String message) {
+		super(message);
 	}
+
+	public HttpGeneratorException(Throwable cause) {
+		super(cause);
+	}
+
+	public HttpGeneratorException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

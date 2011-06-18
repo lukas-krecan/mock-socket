@@ -16,6 +16,9 @@
 
 package net.javacrumbs.mocksocket;
 
+import net.javacrumbs.mocksocket.connection.MockConnection;
+import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
+import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.matchers.AddressMatcher;
 import net.javacrumbs.mocksocket.matchers.DataMatcher;
@@ -23,10 +26,28 @@ import net.javacrumbs.mocksocket.matchers.DataMatcher;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.CombinableMatcher;
 
-public class SocketMatchers {
-	protected SocketMatchers()
+/**
+ * Main class of mock socket to be statically imported tou your test.
+ * @author Lukas Krecan
+ *
+ */
+public class MockSocket {
+	protected MockSocket()
 	{
 		
+	}
+	
+	public synchronized static UniversalMockRecorder expectCall() {
+		return StaticConnectionFactory.expectCall();
+	}
+	
+	public static void reset()
+	{
+		StaticConnectionFactory.reset();
+	}
+	
+	public synchronized static MockConnection getConnection() {
+		return StaticConnectionFactory.getConnection();
 	}
 
 	public static Matcher<RequestSocketData> data(Matcher<byte[]> dataMatcher)

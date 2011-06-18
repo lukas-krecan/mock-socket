@@ -17,26 +17,29 @@ package net.javacrumbs.mocksocket.connection;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketImplFactory;
 
 import net.javacrumbs.mocksocket.MockSocketImplFactory;
-import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
-import net.javacrumbs.mocksocket.matchers.DataMatcher;
 
-import org.hamcrest.Matcher;
-import org.junit.internal.matchers.CombinableMatcher;
 
 /**
- * Stores connections in a static field.
+ * Stores connections in a static field. It is NOT threads safe so you can not execute multiple tests in parallel. 
+ * You also can not use it if there is a {@link SocketImplFactory} already set.
  * @author Lukas Krecan
- *
+ * @see Socket#setSocketImplFactory(SocketImplFactory)
  */
 public class StaticConnectionFactory implements ConnectionFactory {
 	private static UniversalMockConnection expectedConnection;
+
+	static 
+	{
+		bootstrap();
+	}
 	
-	public static void bootstrap()
+	static void bootstrap()
 	{
 		try {
-			Socket.setSocketImplFactory(new MockSocketImplFactory(new ConnectionFactoryMockSocketImpl(new StaticConnectionFactory())));
+			Socket.setSocketImplFactory(new MockSocketImplFactory(new StaticConnectionFactory()));
 		} catch (IOException e) {
 			throw new IllegalStateException("Can not bootstrap the connection factory",e);
 		}
@@ -51,7 +54,7 @@ public class StaticConnectionFactory implements ConnectionFactory {
 		connection.onCreate(address);
 		return connection;
 	}
-
+	
 	public synchronized static UniversalMockRecorder expectCall() {
 		if (getConnection()==null)
 		{
@@ -65,20 +68,17 @@ public class StaticConnectionFactory implements ConnectionFactory {
 		}
 	}
 	
-
-	protected static void setExpectedConnection(UniversalMockConnection mockConnection) {
-		expectedConnection = mockConnection;
-	}
-	
 	public synchronized static void reset()
 	{
 		expectedConnection = null;
 	}
 
+
+	protected static void setExpectedConnection(UniversalMockConnection mockConnection) {
+		expectedConnection = mockConnection;
+	}
+	
 	public synchronized static MockConnection getConnection() {
 		return expectedConnection;
 	}
-
-
-
 }

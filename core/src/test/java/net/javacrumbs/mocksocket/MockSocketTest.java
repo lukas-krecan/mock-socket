@@ -37,9 +37,6 @@ import org.junit.Test;
 public class MockSocketTest {
 	private static final String ADDRESS = "http://localhost/";
 
-	static {
-		StaticConnectionFactory.bootstrap();
-	}
 	@After
 	public void reset()
 	{

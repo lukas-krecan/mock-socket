@@ -16,7 +16,7 @@
 package net.javacrumbs.mocksocket.connection;
 
 
-import static net.javacrumbs.mocksocket.SocketMatchers.*;
+import static net.javacrumbs.mocksocket.MockSocket.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

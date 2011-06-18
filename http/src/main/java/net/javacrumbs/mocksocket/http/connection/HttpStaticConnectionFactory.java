@@ -22,8 +22,7 @@ import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
  * Special factory for HTTP connections.
  */
 public class HttpStaticConnectionFactory extends StaticConnectionFactory{
-	
-	
+		
 	public synchronized static UniversalHttpMockRecorder expectCall() {
 		if (getConnection()==null)
 		{
