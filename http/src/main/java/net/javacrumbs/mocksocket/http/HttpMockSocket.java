@@ -38,6 +38,11 @@ public class HttpMockSocket extends MockSocket{
 		return new HttpResponseGenerator();
 	}
 	
+	public static HttpRequest request(int index)
+	{
+		return new HttpParser(getConnection().requestData().get(index));
+	}
+	
 	public static UniversalHttpMockRecorder expectCall() {
 		return HttpStaticConnectionFactory.expectCall();
 	}

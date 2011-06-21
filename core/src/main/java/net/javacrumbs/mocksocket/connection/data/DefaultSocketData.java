@@ -29,7 +29,7 @@ public class DefaultSocketData implements SocketData
 	protected final byte[] data;
 	
 
-	public DefaultSocketData( byte[] data) {
+	public DefaultSocketData(byte[] data) {
 		this.data = data;
 	}
 

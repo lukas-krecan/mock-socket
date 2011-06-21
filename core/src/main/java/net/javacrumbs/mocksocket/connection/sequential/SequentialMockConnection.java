@@ -48,7 +48,7 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		}
 		else
 		{
-			throw new MockSocketException("No more connections expected.");
+			throw new MockSocketException("No more connections expected. Requests recorded so far are: "+requestData());
 		}
 	}
 }

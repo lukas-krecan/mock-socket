@@ -32,7 +32,7 @@ public class HttpParserTest {
 				"Content-Length: 9\n" + 
 				"\n" + 
 				"ěščřžýáíé";
-		HttpParser parser = new HttpParser(new DefaultSocketData(data.getBytes("ISO-8859-2")));
+		HttpRequest parser = new HttpParser(new DefaultSocketData(data.getBytes("ISO-8859-2")));
 		assertEquals("ěščřžýáíé", parser.getContent());
 	}
 }

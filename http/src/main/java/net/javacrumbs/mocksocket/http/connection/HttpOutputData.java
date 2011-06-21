@@ -28,7 +28,7 @@ public class HttpOutputData extends OutputSocketData {
 	
 	@Override
 	public String toString() {
-		return "address: "+getAddress()+"\ndata:\n"+getDataAsString();
+		return "address: "+getAddress()+"\n"+getDataAsString();
 	}
 
 	private String getDataAsString() {

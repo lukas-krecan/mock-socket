@@ -106,7 +106,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			}
 			else
 			{
-				throw new MockSocketException("No more connections expected for request matching matcher: "+matcher+".");
+				throw new MockSocketException("No more connections expected for request matching matcher: "+matcher+". Requests recorded so far are: "+requestData());
 			}
 		}
 

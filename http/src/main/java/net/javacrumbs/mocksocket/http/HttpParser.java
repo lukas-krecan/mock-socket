@@ -17,9 +17,11 @@
 package net.javacrumbs.mocksocket.http;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.data.SocketData;
+import net.javacrumbs.mocksocket.http.connection.HttpOutputData;
 
 import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.http.MimeTypes;
@@ -29,11 +31,14 @@ import org.eclipse.jetty.io.View;
 import org.eclipse.jetty.testing.HttpTester;
 import org.eclipse.jetty.util.ByteArrayOutputStream2;
 
-public class HttpParser  {
+public class HttpParser implements HttpRequest  {
 	private final HttpTester httpTester;
+	
+	private final SocketData socketData;
 	
 	public HttpParser(SocketData data) {
 		httpTester = createTester(data.getBytes());
+		this.socketData = data;
 	}
 
 	private HttpTester createTester(byte[] data) {
@@ -79,8 +84,8 @@ public class HttpParser  {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Enumeration<String> getHeaderNames() {
-		return httpTester.getHeaderNames();
+	public List<String> getHeaderNames() {
+		return Collections.list(httpTester.getHeaderNames());
 	}
 
 	public long getLongHeader(String name) throws NumberFormatException {
@@ -92,14 +97,31 @@ public class HttpParser  {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Enumeration<String> getHeaderValues(String name) {
-		return httpTester.getHeaderValues(name);
+	public List<String> getHeaderValues(String name) {
+		return  Collections.list(httpTester.getHeaderValues(name));
 	}
 
 	public String getContent() {
 		return httpTester.getContent();
 	}
 	
+	public byte[] getBytes() {
+		return socketData.getBytes();
+	}
+	
+	/**
+	 * Returns address to which the request was sent to or null.
+	 */
+	public String getAddress() {
+		if (socketData instanceof HttpOutputData)
+		{
+			return ((HttpOutputData) socketData).getAddress();
+		}
+		else
+		{
+			return null;
+		}
+	}
 	/**
 	 * HttpTester that can parse byte[].
 	 * @author Lukas Krecan
@@ -199,6 +221,5 @@ public class HttpParser  {
 	    }
 		
 	}
-
 
 }
