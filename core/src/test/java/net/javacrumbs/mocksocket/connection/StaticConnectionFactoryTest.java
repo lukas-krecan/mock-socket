@@ -26,6 +26,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
+import net.javacrumbs.mocksocket.MockSocketException;
 import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 
@@ -109,7 +110,7 @@ public class StaticConnectionFactoryTest {
 			connection.getInputStream();
 			fail();
 		}
-		catch(AssertionError e)
+		catch(MockSocketException e)
 		{
 			assertThat(e.getMessage(), is("No more connections expected."));
 		}
@@ -169,7 +170,7 @@ public class StaticConnectionFactoryTest {
 			connection.getInputStream().read();
 			fail("Exception expected");
 		}
-		catch(AssertionError e)
+		catch(MockSocketException e)
 		{
 			assertEquals("No matcher matches request [3, 3, 3, 3]. Do not know which response to return.", e.getMessage());
 		}
@@ -186,7 +187,7 @@ public class StaticConnectionFactoryTest {
 			connection.getInputStream().read();
 			fail("Exception expected");
 		}
-		catch(AssertionError e)
+		catch(MockSocketException e)
 		{
 			assertTrue(e.getMessage().startsWith("No more connections expected for request matching matcher: "));
 		}

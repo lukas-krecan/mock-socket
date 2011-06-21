@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.javacrumbs.mocksocket.MockSocketException;
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
 import net.javacrumbs.mocksocket.connection.MockConnection;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
@@ -47,7 +48,7 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		}
 		else
 		{
-			throw new AssertionError("No more connections expected.");
+			throw new MockSocketException("No more connections expected.");
 		}
 	}
 }

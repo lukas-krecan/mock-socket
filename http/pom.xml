@@ -16,8 +16,8 @@
 	<dependencies>
 		<dependency>
 		    <groupId>org.eclipse.jetty</groupId>
-		    <artifactId>jetty-servlet-tester</artifactId>
-		    <version>7.0.0.M2</version>
+		    <artifactId>test-jetty-servlet</artifactId>
+		    <version>7.4.2.v20110526</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.hamcrest</groupId>

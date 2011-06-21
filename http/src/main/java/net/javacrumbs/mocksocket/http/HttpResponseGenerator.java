@@ -73,7 +73,7 @@ public class HttpResponseGenerator implements SocketData{
 	        Buffer sb=new ByteArrayBuffer(4*1024);
 	        ByteArrayOutputStream out = new ByteArrayOutputStream();
 			StreamEndPoint endpoint = new StreamEndPoint(new ByteArrayInputStream(new byte[0]), out);
-			org.eclipse.jetty.http.HttpGenerator generator = new org.eclipse.jetty.http.HttpGenerator(new SimpleBuffers(new Buffer[]{sb,bb}),endpoint, sb.capacity(), bb.capacity());
+			org.eclipse.jetty.http.HttpGenerator generator = new org.eclipse.jetty.http.HttpGenerator(new SimpleBuffers(sb,bb),endpoint);
 			generator.setResponse(status, HttpStatus.getMessage(status));
 			generator.addContent(new ByteArrayBuffer(byteContent), true);
 			generator.completeHeader(httpFields, true);

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.javacrumbs.mocksocket.MockSocketException;
 import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
 import net.javacrumbs.mocksocket.connection.MockConnection;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
@@ -77,14 +78,14 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			return wrappedInputStream.read();
 		}
 
-		private InputStream findInputStream() throws IOException, AssertionError {
+		private InputStream findInputStream() throws IOException, MockSocketException {
 			for (MatcherWithData matcher : matchers) {
 				if (matcher.getMatcher().matches(requestSocketData))
 				{
 					return matcher.getResponse();
 				}
 			}
-			throw new AssertionError("No matcher matches request "+requestSocketData+". Do not know which response to return.");
+			throw new MockSocketException("No matcher matches request "+requestSocketData+". Do not know which response to return.");
 		}
 	}
 	
@@ -105,7 +106,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 			}
 			else
 			{
-				throw new AssertionError("No more connections expected for request matching matcher: "+matcher+".");
+				throw new MockSocketException("No more connections expected for request matching matcher: "+matcher+".");
 			}
 		}
 
