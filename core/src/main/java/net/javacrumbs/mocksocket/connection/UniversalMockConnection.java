@@ -36,6 +36,12 @@ import org.hamcrest.Matcher;
  */
 public class UniversalMockConnection implements UniversalMockRecorder, MockConnection {
 	private AbstractMockConnection wrappedConnection;
+	
+	private final String address;
+
+	public UniversalMockConnection(String address) {
+		this.address = address;
+	}
 
 	public SequentialMockRecorder andReturn(SocketData data) {
 		SequentialMockConnection connection = createSequentialConnection();

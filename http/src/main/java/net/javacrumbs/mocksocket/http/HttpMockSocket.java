@@ -38,13 +38,13 @@ public class HttpMockSocket extends MockSocket{
 		return new HttpResponseGenerator();
 	}
 	
-	public static HttpRequest request(int index)
+	public static HttpRequest requestTo(String address, int index)
 	{
-		return new HttpParser(getConnection().requestData().get(index));
+		return new HttpParser(getConnectionTo(address).requestData().get(index));
 	}
 	
-	public static UniversalHttpMockRecorder expectCall() {
-		return HttpStaticConnectionFactory.expectCall();
+	public static UniversalHttpMockRecorder expectCallTo(String address) {
+		return HttpStaticConnectionFactory.expectCallTo(address);
 	}
 	
 	public static CombinableMatcher<RequestSocketData> status(Matcher<Integer> statusMatcher) {

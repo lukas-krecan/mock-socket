@@ -54,12 +54,12 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testExpectOne() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
-		assertThat(StaticConnectionFactory.getConnection().requestData().size(), is(1));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().size(), is(1));
 //		assertTrue(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA4)));
 //		assertFalse(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA3)));
 	}
@@ -72,36 +72,36 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testExpectTwo() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andReturn(DATA2).andReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2).andReturn(DATA1);
 				
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA3.getBytes()));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(0).getBytes(), is(DATA3.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(1).getBytes(), is(DATA4.getBytes()));
 	}
 	@Test
 	public void testExpectTwoUniversal() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andReturn(DATA2).andReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2).andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA3.getBytes()));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(0).getBytes(), is(DATA3.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(1).getBytes(), is(DATA4.getBytes()));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andReturn(DATA2);
-		StaticConnectionFactory.expectCall().andReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA2);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
 	}
 
 	@Test
 	public void testMoreRequests() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA1);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
@@ -120,33 +120,33 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testWithPayload() throws IOException
 	{
-		StaticConnectionFactory.expectCall()
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
 			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1)
 			.andWhenRequest(data(is(DATA3.getBytes()))).thenReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(0).getBytes(), is(DATA4.getBytes()));
 	
 	}
 	@Test
 	public void testWithAddress() throws IOException
 	{
-		StaticConnectionFactory.expectCall()
-		.andWhenRequest(address(is(ADDRESS1))).thenReturn(DATA1)
-		.andWhenRequest(address(is(ADDRESS2))).thenReturn(DATA2);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS2).andReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS2,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS2).requestData().get(0).getBytes(), is(DATA3.getBytes()));
 		
 	}
 	@Test
 	public void testWithPayloadMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCall()
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
 			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1).thenReturn(DATA3)
 			.andWhenRequest(data(is(DATA3.getBytes()))).thenReturn(DATA2);
 		
@@ -154,13 +154,13 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA3, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnectionTo(ADDRESS1).requestData().get(0).getBytes(), is(DATA4.getBytes()));
 		
 	}
 	@Test
 	public void testUnexpected() throws IOException
 	{
-		StaticConnectionFactory.expectCall()
+		StaticConnectionFactory.expectCallTo(ADDRESS1)
 			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
@@ -178,7 +178,7 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testUnexpectedMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
+		StaticConnectionFactory.expectCallTo(ADDRESS1).andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
 		connection.getOutputStream().write(DATA4.getBytes());

@@ -16,11 +16,11 @@
 package net.javacrumbs.mocksocket.http;
 
 import static net.javacrumbs.mocksocket.MockSocket.address;
-import static net.javacrumbs.mocksocket.MockSocket.getConnection;
-import static net.javacrumbs.mocksocket.http.HttpMockSocket.expectCall;
+import static net.javacrumbs.mocksocket.MockSocket.getConnectionTo;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.expectCallTo;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.header;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.method;
-import static net.javacrumbs.mocksocket.http.HttpMockSocket.request;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.requestTo;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.response;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,6 +42,7 @@ import org.junit.After;
 import org.junit.Test;
 
 public class SampleTest {
+	private static final String EXPECTED_ADDRESS = "localhost:80";
 	private static final String ADDRESS = "http://localhost/";
 
 	@After
@@ -52,8 +53,8 @@ public class SampleTest {
 
 	@Test
 	public void testHttpClient() throws ClientProtocolException, IOException {
-		expectCall()
-			.andWhenRequest(method(is("POST")).and(address(is("localhost:80")))).thenReturn(response().withStatus(404))
+		expectCallTo(EXPECTED_ADDRESS)
+			.andWhenRequest(method(is("POST")).and(address(is(EXPECTED_ADDRESS)))).thenReturn(response().withStatus(404))
 			.andWhenRequest(method(is("GET"))).thenReturn(response().withStatus(200).withContent("Text"));
 		
 		HttpClient httpclient = new DefaultHttpClient();
@@ -63,10 +64,10 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
-		assertThat(getConnection().requestData().get(0), method(is("GET")));
-		assertThat(request(0).getMethod(), is("GET"));
-		assertThat(request(0).getAddress(), is("localhost:80"));
+		assertThat(getConnectionTo(EXPECTED_ADDRESS).requestData(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(getConnectionTo(EXPECTED_ADDRESS).requestData().get(0), method(is("GET")));
+		assertThat(requestTo(EXPECTED_ADDRESS, 0).getMethod(), is("GET"));
+		assertThat(requestTo(EXPECTED_ADDRESS, 0).getAddress(), is(EXPECTED_ADDRESS));
 						
 		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
 		getResponse.getEntity().writeTo(outstream);
@@ -80,7 +81,7 @@ public class SampleTest {
 	}
 	@Test(expected=MockSocketException.class)
 	public void testSequential() throws ClientProtocolException, IOException {
-		expectCall().andReturn(response().withStatus(200).withContent("Text"));
+		expectCallTo(EXPECTED_ADDRESS).andReturn(response().withStatus(200).withContent("Text"));
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
@@ -89,10 +90,10 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
-		assertThat(getConnection().requestData().get(0), method(is("GET")));
-		assertThat(request(0).getMethod(), is("GET"));
-		assertThat(request(0).getAddress(), is("localhost:80"));
+		assertThat(getConnectionTo(EXPECTED_ADDRESS).requestData(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(getConnectionTo(EXPECTED_ADDRESS).requestData().get(0), method(is("GET")));
+		assertThat(requestTo(EXPECTED_ADDRESS, 0).getMethod(), is("GET"));
+		assertThat(requestTo(EXPECTED_ADDRESS, 0).getAddress(), is(EXPECTED_ADDRESS));
 		
 		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
 		getResponse.getEntity().writeTo(outstream);
@@ -104,7 +105,7 @@ public class SampleTest {
 	}
 	@Test
 	public void testHttpClientSequential() throws ClientProtocolException, IOException {
-		expectCall()
+		expectCallTo(EXPECTED_ADDRESS)
 		.andReturn("HTTP/1.0 200 OK\n\nTest")
 		.andReturn("HTTP/1.0 404 Not Found\n");
 		
@@ -115,12 +116,31 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(getConnectionTo(EXPECTED_ADDRESS).requestData(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 		
 		HttpPost httppost = new HttpPost(ADDRESS);
 		HttpResponse postResponse = httpclient.execute(httppost);
 		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));
 		httppost.abort();
+	}
+	@Test
+	public void testReuseConnection() throws ClientProtocolException, IOException {
+		HttpClient httpclient = new DefaultHttpClient();
+		testGet(httpclient);
+		reset();
+		testGet(httpclient);
+	}
+
+	private void testGet(HttpClient httpclient) throws IOException, ClientProtocolException {
+		expectCallTo(EXPECTED_ADDRESS).andReturn("HTTP/1.0 200 OK\n\nTest");
+				
+		HttpGet httpget = new HttpGet(ADDRESS);
+		httpget.addHeader("Accept","text/plain");
+		HttpResponse getResponse = httpclient.execute(httpget);
+		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
+		
+		assertThat(getConnectionTo(EXPECTED_ADDRESS).requestData(), hasItem(header("Accept", is("text/plain"))));
+		httpget.abort();
 	}
 }

@@ -23,11 +23,11 @@ import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
  */
 public class HttpStaticConnectionFactory extends StaticConnectionFactory{
 		
-	public synchronized static UniversalHttpMockRecorder expectCall() {
-		if (getConnection()==null)
+	public synchronized static UniversalHttpMockRecorder expectCallTo(String address) {
+		if (getConnectionTo(address)==null)
 		{
-			HttpUniversalMockConnection mockConnection = new HttpUniversalMockConnection();
-			setExpectedConnection(mockConnection);
+			HttpUniversalMockConnection mockConnection = new HttpUniversalMockConnection(address);
+			addExpectedConnection(address, mockConnection);
 			return mockConnection;
 		}
 		else

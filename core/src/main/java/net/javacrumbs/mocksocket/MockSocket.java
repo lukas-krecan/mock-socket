@@ -42,8 +42,8 @@ public class MockSocket {
 	 * Prepares mock socket to be trained.
 	 * @return
 	 */
-	public synchronized static UniversalMockRecorder expectCall() {
-		return StaticConnectionFactory.expectCall();
+	public static UniversalMockRecorder expectCallTo(String address) {
+		return StaticConnectionFactory.expectCallTo(address);
 	}
 	
 	/**
@@ -58,8 +58,8 @@ public class MockSocket {
 	 * Returns {@link MockConnection}.
 	 * @return
 	 */
-	public synchronized static MockConnection getConnection() {
-		return StaticConnectionFactory.getConnection();
+	public static MockConnection getConnectionTo(String address) {
+		return StaticConnectionFactory.getConnectionTo(address);
 	}
 
 	/**
