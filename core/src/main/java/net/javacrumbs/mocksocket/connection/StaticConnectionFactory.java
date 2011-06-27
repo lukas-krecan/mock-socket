@@ -29,7 +29,7 @@ import net.javacrumbs.mocksocket.socket.MockSocketImplFactory;
  * @see Socket#setSocketImplFactory(SocketImplFactory)
  */
 public class StaticConnectionFactory implements ConnectionFactory {
-	private static UniversalMockConnection expectedConnection;
+	private static UniversalMockConnectionFactory expectedConnection;
 
 	static 
 	{
@@ -46,19 +46,18 @@ public class StaticConnectionFactory implements ConnectionFactory {
 	}
 	
 	public synchronized Connection createConnection(String address) {
-		UniversalMockConnection connection = expectedConnection;
-		if (connection==null)
+		UniversalMockConnectionFactory connectionFactory = expectedConnection;
+		if (connectionFactory==null)
 		{
 			throw new IllegalStateException("Connection not expected. You have to call expectCall() first.");
 		}
-		connection.onCreate(address);
-		return connection;
+		return connectionFactory.create(address);
 	}
 	
 	public synchronized static UniversalMockRecorder expectCall() {
 		if (getConnection()==null)
 		{
-			UniversalMockConnection mockConnection = new UniversalMockConnection();
+			UniversalMockConnectionFactory mockConnection = new UniversalMockConnectionFactory();
 			setExpectedConnection(mockConnection);
 			return mockConnection;
 		}
@@ -74,11 +73,11 @@ public class StaticConnectionFactory implements ConnectionFactory {
 	}
 
 
-	protected static void setExpectedConnection(UniversalMockConnection mockConnection) {
+	protected static void setExpectedConnection(UniversalMockConnectionFactory mockConnection) {
 		expectedConnection = mockConnection;
 	}
 	
-	public synchronized static MockConnection getConnection() {
+	public synchronized static RequestRecorder getConnection() {
 		return expectedConnection;
 	}
 }

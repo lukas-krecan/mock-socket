@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.MockSocketException;
-import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
-import net.javacrumbs.mocksocket.connection.MockConnection;
+import net.javacrumbs.mocksocket.connection.AbstractMockConnectionFactory;
+import net.javacrumbs.mocksocket.connection.RequestRecorder;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 
@@ -34,11 +34,11 @@ import org.hamcrest.Matcher;
  * @author Lukas Krecan
  *
  */
-public class MatcherBasedMockConnection extends AbstractMockConnection implements MockConnection, MatcherBasedMockResultRecorder, MatcherBasedMockRecorder {
+public class MatcherBasedMockConnectionFactory extends AbstractMockConnectionFactory implements RequestRecorder, MatcherBasedMockResultRecorder, MatcherBasedMockRecorder {
 
 	private final List<MatcherWithData> matchers = new ArrayList<MatcherWithData>();
 	
-	public InputStream createInputStream() throws IOException {
+	protected InputStream createInputStream() {
 		return new RedirectingInputStream(getRequestSocketData());
 	}
 

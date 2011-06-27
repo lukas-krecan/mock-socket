@@ -15,60 +15,49 @@
  */
 package net.javacrumbs.mocksocket.connection;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
+import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnectionFactory;
 import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockResultRecorder;
-import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
+import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnectionFactory;
 import net.javacrumbs.mocksocket.connection.sequential.SequentialMockRecorder;
 
 import org.hamcrest.Matcher;
 
 /**
- * Mock connection that creates and wraps either {@link SequentialMockConnection} or {@link MatcherBasedMockConnection}.
+ * Mock connection that creates and wraps either {@link SequentialMockConnectionFactory} or {@link MatcherBasedMockConnectionFactory}.
  * @author Lukas Krecan
  *
  */
-public class UniversalMockConnection implements UniversalMockRecorder, MockConnection {
-	private AbstractMockConnection wrappedConnection;
+public class UniversalMockConnectionFactory implements UniversalMockRecorder, RequestRecorder {
+	private AbstractMockConnectionFactory wrappedConnection;
 
 	public SequentialMockRecorder andReturn(SocketData data) {
-		SequentialMockConnection connection = createSequentialConnection();
+		SequentialMockConnectionFactory connection = createSequentialConnection();
 		wrappedConnection = connection;
 		connection.andReturn(data);
 		return connection;
 	}
 
-	protected SequentialMockConnection createSequentialConnection() {
-		return new SequentialMockConnection();
+	protected SequentialMockConnectionFactory createSequentialConnection() {
+		return new SequentialMockConnectionFactory();
 	}
 
 	public MatcherBasedMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher) {
-		MatcherBasedMockConnection connection = createMatcherBasedConnection();
+		MatcherBasedMockConnectionFactory connection = createMatcherBasedConnection();
 		connection.andWhenRequest(matcher);
 		wrappedConnection = connection;
 		return connection;
 	}
 
-	protected MatcherBasedMockConnection createMatcherBasedConnection() {
-		return new MatcherBasedMockConnection();
+	protected MatcherBasedMockConnectionFactory createMatcherBasedConnection() {
+		return new MatcherBasedMockConnectionFactory();
 	}
 
-	public void onCreate(String address) {
-		wrappedConnection.onCreate(address);
-	}
-
-	public InputStream getInputStream() throws IOException {
-		return wrappedConnection.getInputStream();
-	}
-
-	public OutputStream getOutputStream() throws IOException {
-		return wrappedConnection.getOutputStream();
+	public Connection create(String address) {
+		return wrappedConnection.create(address);
 	}
 
 	public List<RequestSocketData> requestData() {

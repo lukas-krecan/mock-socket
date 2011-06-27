@@ -16,7 +16,7 @@
 
 package net.javacrumbs.mocksocket;
 
-import net.javacrumbs.mocksocket.connection.MockConnection;
+import net.javacrumbs.mocksocket.connection.RequestRecorder;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
@@ -55,10 +55,10 @@ public class MockSocket {
 	}
 	
 	/**
-	 * Returns {@link MockConnection}.
+	 * Returns {@link RequestRecorder}.
 	 * @return
 	 */
-	public synchronized static MockConnection getConnection() {
+	public synchronized static RequestRecorder getConnection() {
 		return StaticConnectionFactory.getConnection();
 	}
 

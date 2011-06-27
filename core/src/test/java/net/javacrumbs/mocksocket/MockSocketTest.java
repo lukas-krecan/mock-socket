@@ -16,6 +16,7 @@
 package net.javacrumbs.mocksocket;
 
 import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.expectCall;
+import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,14 +51,14 @@ public class MockSocketTest {
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet(ADDRESS);
 		HttpResponse response = httpclient.execute(httpget);
-		System.out.println(printStream(response.getEntity().getContent()));
+		assertEquals("Test", printStream(response.getEntity().getContent()));
 	}
 
 	@Test
 	public void testUrl() throws ClientProtocolException, IOException {
 		expectCall().andReturn(new DefaultSocketData("HTTP/1.0 200 OK\n\nTest".getBytes()));
 		URL url = new URL(ADDRESS);
-		System.out.println(printStream(url.openStream()));
+		assertEquals("Test", printStream(url.openStream()));
 	}
 
 	private String printStream(InputStream stream) throws IOException {

@@ -16,10 +16,13 @@
 package net.javacrumbs.mocksocket.connection;
 
 
-import static net.javacrumbs.mocksocket.MockSocket.*;
-import static org.hamcrest.CoreMatchers.*;
+import static net.javacrumbs.mocksocket.MockSocket.address;
+import static net.javacrumbs.mocksocket.MockSocket.data;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -104,16 +107,25 @@ public class StaticConnectionFactoryTest {
 		StaticConnectionFactory.expectCall().andReturn(DATA1);
 		
 		checkConnection(ADDRESS1,DATA1);
-		Connection connection = connectionFactory.createConnection(ADDRESS1);
 		try
 		{
-			connection.getInputStream();
+			connectionFactory.createConnection(ADDRESS1);
 			fail();
 		}
 		catch(MockSocketException e)
 		{
 			assertThat(e.getMessage(), startsWith("No more connections expected."));
 		}
+	}
+	
+	@Test
+	public void testMultipleGetInputStream() throws IOException
+	{
+		StaticConnectionFactory.expectCall().andReturn(DATA1);
+		
+		Connection connection = connectionFactory.createConnection(ADDRESS1);
+		assertSame(connection.getInputStream(), connection.getInputStream());
+		assertSame(connection.getOutputStream(), connection.getOutputStream());
 	}
 
 	

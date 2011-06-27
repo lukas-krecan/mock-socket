@@ -16,28 +16,28 @@
 
 package net.javacrumbs.mocksocket.http.connection;
 
-import net.javacrumbs.mocksocket.connection.UniversalMockConnection;
+import net.javacrumbs.mocksocket.connection.UniversalMockConnectionFactory;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
-import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnection;
-import net.javacrumbs.mocksocket.http.connection.matcher.HttpMatcherBasedMockConnection;
+import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnectionFactory;
+import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnectionFactory;
+import net.javacrumbs.mocksocket.http.connection.matcher.HttpMatcherBasedMockConnectionFactory;
 import net.javacrumbs.mocksocket.http.connection.matcher.MatcherBasedHttpMockResultRecorder;
-import net.javacrumbs.mocksocket.http.connection.sequential.HttpSequentialMockConnection;
+import net.javacrumbs.mocksocket.http.connection.sequential.HttpSequentialMockConnectionFactory;
 import net.javacrumbs.mocksocket.http.connection.sequential.SequentialHttpMockRecorder;
 
 import org.hamcrest.Matcher;
 
-public class HttpUniversalMockConnection extends UniversalMockConnection implements UniversalHttpMockRecorder{
+public class HttpUniversalMockConnectionFactory extends UniversalMockConnectionFactory implements UniversalHttpMockRecorder{
 	
 	@Override
-	protected MatcherBasedMockConnection createMatcherBasedConnection() {
-		return new HttpMatcherBasedMockConnection();
+	protected MatcherBasedMockConnectionFactory createMatcherBasedConnection() {
+		return new HttpMatcherBasedMockConnectionFactory();
 	}
 	
 	@Override
-	protected SequentialMockConnection createSequentialConnection() {
-		return new HttpSequentialMockConnection();
+	protected SequentialMockConnectionFactory createSequentialConnection() {
+		return new HttpSequentialMockConnectionFactory();
 	}
 	
 	public SequentialHttpMockRecorder andReturn(String data){

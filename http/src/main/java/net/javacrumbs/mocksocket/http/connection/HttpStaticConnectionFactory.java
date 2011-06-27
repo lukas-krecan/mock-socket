@@ -26,7 +26,7 @@ public class HttpStaticConnectionFactory extends StaticConnectionFactory{
 	public synchronized static UniversalHttpMockRecorder expectCall() {
 		if (getConnection()==null)
 		{
-			HttpUniversalMockConnection mockConnection = new HttpUniversalMockConnection();
+			HttpUniversalMockConnectionFactory mockConnection = new HttpUniversalMockConnectionFactory();
 			setExpectedConnection(mockConnection);
 			return mockConnection;
 		}

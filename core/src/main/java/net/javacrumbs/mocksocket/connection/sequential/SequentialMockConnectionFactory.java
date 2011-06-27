@@ -16,14 +16,13 @@
 package net.javacrumbs.mocksocket.connection.sequential;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.MockSocketException;
-import net.javacrumbs.mocksocket.connection.AbstractMockConnection;
-import net.javacrumbs.mocksocket.connection.MockConnection;
+import net.javacrumbs.mocksocket.connection.AbstractMockConnectionFactory;
+import net.javacrumbs.mocksocket.connection.RequestRecorder;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 /**
@@ -31,9 +30,9 @@ import net.javacrumbs.mocksocket.connection.data.SocketData;
  * @author Lukas Krecan
  *
  */
-public class SequentialMockConnection extends AbstractMockConnection implements MockConnection, SequentialMockRecorder{
+public class SequentialMockConnectionFactory extends AbstractMockConnectionFactory implements RequestRecorder, SequentialMockRecorder{
 	private final List<SocketData> responseData = new ArrayList<SocketData>();
-	public SequentialMockConnection() {
+	public SequentialMockConnectionFactory() {
 	}
 
 	public SequentialMockRecorder andReturn(SocketData data) {
@@ -41,7 +40,7 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		return this;
 	}
 	
-	public InputStream createInputStream() throws IOException {
+	protected InputStream createInputStream() {
 		if (responseData.size()>actualConnection)
 		{
 			return new ByteArrayInputStream(responseData.get(actualConnection).getBytes());

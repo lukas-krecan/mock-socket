@@ -19,6 +19,6 @@ import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 
-public interface MockConnection extends Connection {
+public interface RequestRecorder {
 	public List<RequestSocketData> requestData();
 }

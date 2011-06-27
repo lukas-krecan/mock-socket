@@ -15,79 +15,42 @@
  */
 package net.javacrumbs.mocksocket.connection;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.data.OutputSocketData;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
-import net.javacrumbs.mocksocket.connection.data.SocketData;
-
-import org.hamcrest.Matcher;
 
 
 /**
- * Common code for MockConnections.
+ * Common code for creating MockConnections.
  * @author Lukas Krecan
  *
  */
-public abstract class AbstractMockConnection implements MockConnection{
+public abstract class AbstractMockConnectionFactory implements RequestRecorder {
 
 	private final List<OutputSocketData> requestData = new ArrayList<OutputSocketData>();
 	protected int actualConnection = -1;
-	private InputStream inputStream;
 	
-	public void onCreate(String address) {
+	public synchronized Connection create(String address) {
 		actualConnection++;
 		requestData.add(createRequestSocket(address));
-		inputStream = null;
+		
+		return new DefaultConnection(createInputStream(), getRequestSocketData().getOutputStream());
 	}
 
 	protected OutputSocketData createRequestSocket(String address) {
 		return new OutputSocketData(address);
 	}
 
-	public OutputStream getOutputStream() throws IOException {
-		return getRequestSocketData().getOutputStream();
-	}
-	
-	public final InputStream getInputStream() throws IOException
-	{
-		if (inputStream==null)
-		{
-			inputStream = createInputStream();
-		}
-		return inputStream;
-	}
-
-	protected abstract InputStream createInputStream() throws IOException;
+	protected abstract InputStream createInputStream();
 
 	protected OutputSocketData getRequestSocketData() {
 		return requestData.get(actualConnection);
 	}
 	
-	public List<RequestSocketData> requestData() {
+	public synchronized List<RequestSocketData> requestData() {
 		return new ArrayList<RequestSocketData>(requestData);
 	}
-
-	protected int getActualConnection() {
-		return actualConnection;
-	}
-
-	protected void setActualConnection(int actualConnection) {
-		this.actualConnection = actualConnection;
-	}
-	
-	public boolean containsRequestThat(Matcher<RequestSocketData> matcher){
-		for (SocketData data : requestData) {
-			if (matcher.matches(data))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

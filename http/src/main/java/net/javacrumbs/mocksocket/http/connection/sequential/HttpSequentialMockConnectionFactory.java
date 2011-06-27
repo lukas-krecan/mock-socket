@@ -14,34 +14,27 @@
  * limitations under the License.
  */
 
-package net.javacrumbs.mocksocket.http.connection.matcher;
+package net.javacrumbs.mocksocket.http.connection.sequential;
 
 import net.javacrumbs.mocksocket.connection.data.OutputSocketData;
-import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.connection.matcher.MatcherBasedMockConnection;
+import net.javacrumbs.mocksocket.connection.sequential.SequentialMockConnectionFactory;
 import net.javacrumbs.mocksocket.http.connection.HttpData;
 import net.javacrumbs.mocksocket.http.connection.HttpOutputData;
 
-import org.hamcrest.Matcher;
-
-public class HttpMatcherBasedMockConnection extends MatcherBasedMockConnection implements MatcherBasedHttpMockRecorder{
+public class HttpSequentialMockConnectionFactory extends SequentialMockConnectionFactory implements SequentialHttpMockRecorder{
 
 	@Override
 	protected OutputSocketData createRequestSocket(String address) {
 		return new HttpOutputData(address);
 	}
 	@Override
-	public MatcherBasedHttpMockRecorder thenReturn(SocketData data) {
-		return (MatcherBasedHttpMockRecorder)super.thenReturn(data);
+	public SequentialHttpMockRecorder andReturn(SocketData data) {
+		return (SequentialHttpMockRecorder) super.andReturn(data);
 	}
 	
-	public MatcherBasedHttpMockRecorder thenReturn(String data) {
-		return thenReturn(new HttpData(data));
+	public SequentialHttpMockRecorder andReturn(String data) {
+		return andReturn(new HttpData(data));
 	}
-	
-	@Override
-	public MatcherBasedHttpMockResultRecorder andWhenRequest(Matcher<RequestSocketData> matcher) {
-		return (MatcherBasedHttpMockResultRecorder) super.andWhenRequest(matcher);
-	}
+
 }
