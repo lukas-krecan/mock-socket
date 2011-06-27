@@ -16,6 +16,7 @@
 package net.javacrumbs.mocksocket.connection;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,12 @@ public abstract class AbstractMockConnection implements MockConnection{
 
 	private final List<OutputSocketData> requestData = new ArrayList<OutputSocketData>();
 	protected int actualConnection = -1;
+	private InputStream inputStream;
 	
 	public void onCreate(String address) {
 		actualConnection++;
 		requestData.add(createRequestSocket(address));
+		inputStream = null;
 	}
 
 	protected OutputSocketData createRequestSocket(String address) {
@@ -49,6 +52,17 @@ public abstract class AbstractMockConnection implements MockConnection{
 	public OutputStream getOutputStream() throws IOException {
 		return getRequestSocketData().getOutputStream();
 	}
+	
+	public final InputStream getInputStream() throws IOException
+	{
+		if (inputStream==null)
+		{
+			inputStream = createInputStream();
+		}
+		return inputStream;
+	}
+
+	protected abstract InputStream createInputStream() throws IOException;
 
 	protected OutputSocketData getRequestSocketData() {
 		return requestData.get(actualConnection);

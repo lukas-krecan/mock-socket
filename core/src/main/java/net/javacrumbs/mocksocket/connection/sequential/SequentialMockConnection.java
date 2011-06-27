@@ -41,7 +41,7 @@ public class SequentialMockConnection extends AbstractMockConnection implements 
 		return this;
 	}
 	
-	public InputStream getInputStream() throws IOException {
+	public InputStream createInputStream() throws IOException {
 		if (responseData.size()>actualConnection)
 		{
 			return new ByteArrayInputStream(responseData.get(actualConnection).getBytes());

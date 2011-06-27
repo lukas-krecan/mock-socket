@@ -38,7 +38,7 @@ public class MatcherBasedMockConnection extends AbstractMockConnection implement
 
 	private final List<MatcherWithData> matchers = new ArrayList<MatcherWithData>();
 	
-	public InputStream getInputStream() throws IOException {
+	public InputStream createInputStream() throws IOException {
 		return new RedirectingInputStream(getRequestSocketData());
 	}
 
