@@ -17,11 +17,13 @@
 package net.javacrumbs.mocksocket.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.http.connection.HttpOutputData;
+import net.javacrumbs.mocksocket.util.Utils;
 
 import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.http.MimeTypes;
@@ -37,11 +39,11 @@ public class HttpParser implements HttpRequest  {
 	private final SocketData socketData;
 	
 	public HttpParser(SocketData data) {
-		httpTester = createTester(data.getBytes());
+		httpTester = createTester(data.getData());
 		this.socketData = data;
 	}
 
-	private HttpTester createTester(byte[] data) {
+	private HttpTester createTester(InputStream data) {
 		ExtendedHttpTester httpTester = new ExtendedHttpTester();	
 		try {
 			httpTester.parse(data);
@@ -105,8 +107,8 @@ public class HttpParser implements HttpRequest  {
 		return httpTester.getContent();
 	}
 	
-	public byte[] getBytes() {
-		return socketData.getBytes();
+	public InputStream getData() {
+		return socketData.getData();
 	}
 	
 	/**
@@ -132,8 +134,8 @@ public class HttpParser implements HttpRequest  {
 		private String _charset;
 		
 
-		public String parse(byte[] data) throws IOException {
-	        ByteArrayBuffer buf = new ByteArrayBuffer(data);
+		public String parse(InputStream data) throws IOException {
+	        ByteArrayBuffer buf = new ByteArrayBuffer(Utils.toByteArray(data));
 	        View view = new View(buf);
 	        org.eclipse.jetty.http.HttpParser parser = new org.eclipse.jetty.http.HttpParser(view,new PH());
 	        parser.parse();

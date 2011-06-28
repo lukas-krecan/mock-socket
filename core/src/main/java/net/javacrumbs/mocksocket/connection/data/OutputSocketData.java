@@ -16,7 +16,9 @@
 
 package net.javacrumbs.mocksocket.connection.data;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
@@ -30,7 +32,12 @@ public class OutputSocketData implements RequestSocketData {
 		this.address = address;
 	}
 
-	public byte[] getBytes() {
+	public InputStream getData() {
+		return new ByteArrayInputStream(getDataAsBytes());
+	}
+	
+	protected byte[] getDataAsBytes()
+	{
 		return outputStream.toByteArray();
 	}
 	
@@ -44,7 +51,7 @@ public class OutputSocketData implements RequestSocketData {
 	
 	@Override
 	public String toString() {
-		return Arrays.toString(getBytes());
+		return Arrays.toString(outputStream.toByteArray());
 	}
 
 }

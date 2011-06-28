@@ -17,7 +17,8 @@ package net.javacrumbs.mocksocket.connection;
 
 
 import static net.javacrumbs.mocksocket.MockSocket.address;
-import static net.javacrumbs.mocksocket.MockSocket.data;
+import static net.javacrumbs.mocksocket.MockSocket.dataAre;
+import static net.javacrumbs.mocksocket.MockSocket.withData;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertEquals;
@@ -33,9 +34,9 @@ import net.javacrumbs.mocksocket.MockSocketException;
 import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Test;
-import org.springframework.util.FileCopyUtils;
 
 
 public class StaticConnectionFactoryTest {
@@ -61,7 +62,7 @@ public class StaticConnectionFactoryTest {
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4));
 		assertThat(StaticConnectionFactory.getConnection().requestData().size(), is(1));
 //		assertTrue(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA4)));
 //		assertFalse(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA3)));
@@ -80,8 +81,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA3.getBytes()));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA3));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), dataAre(DATA4));
 	}
 	@Test
 	public void testExpectTwoUniversal() throws IOException
@@ -91,8 +92,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA3.getBytes()));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA3));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), dataAre(DATA4));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
@@ -133,13 +134,13 @@ public class StaticConnectionFactoryTest {
 	public void testWithPayload() throws IOException
 	{
 		StaticConnectionFactory.expectCall()
-			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1)
-			.andWhenRequest(data(is(DATA3.getBytes()))).thenReturn(DATA2);
+			.andWhenRequest(withData(DATA4.getData())).thenReturn(DATA1)
+			.andWhenRequest(withData(DATA3.getData())).thenReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4));
 	
 	}
 	@Test
@@ -152,31 +153,31 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS2,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4.getData()));
 		
 	}
 	@Test
 	public void testWithPayloadMultiple() throws IOException
 	{
 		StaticConnectionFactory.expectCall()
-			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1).thenReturn(DATA3)
-			.andWhenRequest(data(is(DATA3.getBytes()))).thenReturn(DATA2);
+			.andWhenRequest(withData(DATA4.getData())).thenReturn(DATA1).thenReturn(DATA3)
+			.andWhenRequest(withData(DATA3.getData())).thenReturn(DATA2);
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA3, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0).getBytes(), is(DATA4.getBytes()));
+		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4.getData()));
 		
 	}
 	@Test
 	public void testUnexpected() throws IOException
 	{
 		StaticConnectionFactory.expectCall()
-			.andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
+			.andWhenRequest(withData(DATA4.getData())).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
-		connection.getOutputStream().write(DATA3.getBytes());
+		IOUtils.copy(DATA3.getData(), connection.getOutputStream());
 		try
 		{
 			connection.getInputStream().read();
@@ -190,10 +191,10 @@ public class StaticConnectionFactoryTest {
 	@Test
 	public void testUnexpectedMultiple() throws IOException
 	{
-		StaticConnectionFactory.expectCall().andWhenRequest(data(is(DATA4.getBytes()))).thenReturn(DATA1);
+		StaticConnectionFactory.expectCall().andWhenRequest(withData(DATA4.getData())).thenReturn(DATA1);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		Connection connection = connectionFactory.createConnection(ADDRESS1);
-		connection.getOutputStream().write(DATA4.getBytes());
+		IOUtils.copy(DATA4.getData(), connection.getOutputStream());
 		try
 		{
 			connection.getInputStream().read();
@@ -213,9 +214,9 @@ public class StaticConnectionFactoryTest {
 		assertNotNull(connection);
 		if (inData!=null)
 		{
-			connection.getOutputStream().write(inData.getBytes());
+			IOUtils.copy(inData.getData(), connection.getOutputStream());
 		}
-		byte[] actualOutData = FileCopyUtils.copyToByteArray(connection.getInputStream());
-		assertThat(actualOutData, is(outData.getBytes()));	
+		byte[] actualOutData = IOUtils.toByteArray(connection.getInputStream());
+		assertThat(actualOutData, is(IOUtils.toByteArray(outData.getData())));	
 	}
 }

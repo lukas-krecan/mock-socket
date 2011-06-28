@@ -21,8 +21,7 @@ import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public class AddressMatcher extends AbstractSocketMatcher {
-
+public class AddressMatcher extends AbstractSocketMatcher<RequestSocketData> {
 
 	public AddressMatcher(Matcher<String> wrappedMatcher) {
 		super(wrappedMatcher);
@@ -32,9 +31,12 @@ public class AddressMatcher extends AbstractSocketMatcher {
 		description.appendText("address ").appendDescriptionOf(getWrappedMatcher());
 	}
 
-	@Override
-	protected boolean doMatch(RequestSocketData item) {
-		return getWrappedMatcher().matches(item.getAddress());
+	public boolean matches(Object item) {
+		if (item instanceof RequestSocketData) {
+			return getWrappedMatcher().matches(((RequestSocketData) item).getAddress());
+		}
+		return false;
 	}
+
 
 }

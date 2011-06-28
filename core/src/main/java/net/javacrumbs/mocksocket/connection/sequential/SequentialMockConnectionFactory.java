@@ -15,7 +15,6 @@
  */
 package net.javacrumbs.mocksocket.connection.sequential;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class SequentialMockConnectionFactory extends AbstractMockConnectionFacto
 	protected InputStream createInputStream() {
 		if (responseData.size()>actualConnection)
 		{
-			return new ByteArrayInputStream(responseData.get(actualConnection).getBytes());
+			return responseData.get(actualConnection).getData();
 		}
 		else
 		{

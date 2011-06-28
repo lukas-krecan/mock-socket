@@ -33,9 +33,9 @@ public class HttpOutputData extends OutputSocketData {
 
 	private String getDataAsString() {
 		try {
-			return new String(getBytes(),"UTF-8");
+			return new String(getDataAsBytes(),"UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			return new String(getBytes());
+			return new String(getDataAsBytes());
 		}
 	}
 

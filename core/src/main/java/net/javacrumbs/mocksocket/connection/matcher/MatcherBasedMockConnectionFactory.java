@@ -15,7 +15,6 @@
  */
 package net.javacrumbs.mocksocket.connection.matcher;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public class MatcherBasedMockConnectionFactory extends AbstractMockConnectionFac
 		public InputStream getResponse() {
 			if (responseData.size()>actualResponse)
 			{
-				return new ByteArrayInputStream(responseData.get(actualResponse++).getBytes());
+				return responseData.get(actualResponse++).getData();
 			}
 			else
 			{

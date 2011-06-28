@@ -16,12 +16,13 @@
 
 package net.javacrumbs.mocksocket.matchers;
 
-import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
+import net.javacrumbs.mocksocket.util.Utils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-public class DataMatcher extends AbstractSocketMatcher {
+public class DataMatcher extends AbstractSocketMatcher<SocketData> {
 
 
 	public DataMatcher(Matcher<byte[]> wrappedMatcher) {
@@ -32,9 +33,10 @@ public class DataMatcher extends AbstractSocketMatcher {
 		description.appendText("data ").appendDescriptionOf(getWrappedMatcher());
 	}
 
-	@Override
-	protected boolean doMatch(RequestSocketData item) {
-		return getWrappedMatcher().matches(item.getBytes());
+	public boolean matches(Object item) {
+		if (item instanceof SocketData) {
+			return getWrappedMatcher().matches(Utils.toByteArray(((SocketData) item).getData()));
+		}
+		return false;
 	}
-
 }

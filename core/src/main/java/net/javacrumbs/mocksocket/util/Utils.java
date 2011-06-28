@@ -1,5 +1,5 @@
-/**
- * Copyright 2009-2011 the original author or authors.
+/*
+ * Copyright 2005-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.mocksocket.matchers;
 
-import net.javacrumbs.mocksocket.connection.data.SocketData;
+package net.javacrumbs.mocksocket.util;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Matcher;
+import java.io.IOException;
+import java.io.InputStream;
 
-public abstract class AbstractSocketMatcher <T extends SocketData> extends BaseMatcher<T> {
+import net.javacrumbs.mocksocket.MockSocketException;
+
+import org.apache.commons.io.IOUtils;
+
+public class Utils {
+	private Utils()
+	{
+		//empty
+	}
 	
-	private final Matcher<?> wrappedMatcher;
-
-	public AbstractSocketMatcher(Matcher<?> wrappedMatcher) {
-		this.wrappedMatcher = wrappedMatcher;
+	public static final byte[] toByteArray(InputStream stream)
+	{
+		try 
+		{
+			return IOUtils.toByteArray(stream);
+		} 
+		catch (IOException e)
+		{
+			throw new MockSocketException("Can not read data.",e);
+		}
+		finally
+		{
+			IOUtils.closeQuietly(stream);
+		}
 	}
-
-	protected Matcher<?> getWrappedMatcher() {
-		return wrappedMatcher;
-	}
-
-
 }

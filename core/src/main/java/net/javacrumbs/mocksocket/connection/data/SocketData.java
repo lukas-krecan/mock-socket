@@ -16,6 +16,8 @@
 
 package net.javacrumbs.mocksocket.connection.data;
 
+import java.io.InputStream;
+
 
 /**
  * Socket data.
@@ -24,5 +26,5 @@ package net.javacrumbs.mocksocket.connection.data;
  */
 public interface SocketData {
 
-	public byte[] getBytes();
+	public InputStream getData();
 }

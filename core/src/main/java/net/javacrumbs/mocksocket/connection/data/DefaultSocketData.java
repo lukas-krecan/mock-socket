@@ -16,6 +16,8 @@
 
 package net.javacrumbs.mocksocket.connection.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 
 /**
@@ -33,8 +35,8 @@ public class DefaultSocketData implements SocketData
 		this.data = data;
 	}
 
-	public byte[] getBytes() {
-		return data;
+	public InputStream getData() {
+		return new ByteArrayInputStream(data);
 	}
 
 	@Override

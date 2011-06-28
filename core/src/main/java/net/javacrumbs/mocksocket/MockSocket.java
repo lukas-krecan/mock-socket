@@ -16,12 +16,18 @@
 
 package net.javacrumbs.mocksocket;
 
+import static org.hamcrest.CoreMatchers.is;
+
+import java.io.InputStream;
+
 import net.javacrumbs.mocksocket.connection.RequestRecorder;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
+import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.matchers.AddressMatcher;
 import net.javacrumbs.mocksocket.matchers.DataMatcher;
+import net.javacrumbs.mocksocket.util.Utils;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.core.CombinableMatcher;
@@ -62,6 +68,33 @@ public class MockSocket {
 		return StaticConnectionFactory.getConnection();
 	}
 
+	/**
+	 * Matcher that can compare data.
+	 * @param dataMatcher
+	 * @return
+	 */
+	public static Matcher<RequestSocketData> withData(InputStream data)
+	{
+		return new CombinableMatcher<RequestSocketData>(new DataMatcher(is(Utils.toByteArray(data))));
+	}
+	/**
+	 * Matcher that can compare data.
+	 * @param dataMatcher
+	 * @return
+	 */
+	public static Matcher<SocketData> dataAre(InputStream data)
+	{
+		return new CombinableMatcher<SocketData>(new DataMatcher(is(Utils.toByteArray(data))));
+	}
+	/**
+	 * Matcher that can compare data.
+	 * @param dataMatcher
+	 * @return
+	 */
+	public static Matcher<SocketData> dataAre(SocketData data)
+	{
+		return dataAre(data.getData());
+	}
 	/**
 	 * Matcher that can compare data.
 	 * @param dataMatcher

@@ -19,6 +19,7 @@ package net.javacrumbs.mocksocket.http;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
 import net.javacrumbs.mocksocket.connection.data.SocketData;
@@ -85,8 +86,8 @@ public class HttpResponseGenerator implements SocketData{
 		}
 	}
 	
-	public byte[] getBytes() {
-		return generate();
+	public InputStream getData() {
+		return new ByteArrayInputStream(generate());
 	}
 
 	private String getCharset() {
