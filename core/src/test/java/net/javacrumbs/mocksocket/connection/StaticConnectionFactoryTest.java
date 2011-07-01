@@ -62,8 +62,8 @@ public class StaticConnectionFactoryTest {
 		
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4));
-		assertThat(StaticConnectionFactory.getConnection().requestData().size(), is(1));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(0), dataAre(DATA4));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().size(), is(1));
 //		assertTrue(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA4)));
 //		assertFalse(StaticConnectionFactory.getConnection().containsRequestThat(is(DATA3)));
 	}
@@ -81,8 +81,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA3));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), dataAre(DATA4));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(0), dataAre(DATA3));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(1), dataAre(DATA4));
 	}
 	@Test
 	public void testExpectTwoUniversal() throws IOException
@@ -92,8 +92,8 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA3));
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(1), dataAre(DATA4));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(0), dataAre(DATA3));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(1), dataAre(DATA4));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testExpectTwice() throws IOException
@@ -140,7 +140,7 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(0), dataAre(DATA4));
 	
 	}
 	@Test
@@ -153,7 +153,7 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA1, DATA4);
 		checkConnection(ADDRESS2,DATA2, DATA3);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4.getData()));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(0), dataAre(DATA4.getData()));
 		
 	}
 	@Test
@@ -167,7 +167,7 @@ public class StaticConnectionFactoryTest {
 		checkConnection(ADDRESS1,DATA2, DATA3);
 		checkConnection(ADDRESS1,DATA3, DATA4);
 		
-		assertThat(StaticConnectionFactory.getConnection().requestData().get(0), dataAre(DATA4.getData()));
+		assertThat(StaticConnectionFactory.getRequestRecorder().requestData().get(0), dataAre(DATA4.getData()));
 		
 	}
 	@Test

@@ -135,7 +135,7 @@ public class HttpParser implements HttpRequest  {
 		
 
 		public String parse(InputStream data) throws IOException {
-	        ByteArrayBuffer buf = new ByteArrayBuffer(Utils.toByteArray(data));
+	        Buffer buf = new ByteArrayBuffer(Utils.toByteArray(data));
 	        View view = new View(buf);
 	        org.eclipse.jetty.http.HttpParser parser = new org.eclipse.jetty.http.HttpParser(view,new PH());
 	        parser.parse();

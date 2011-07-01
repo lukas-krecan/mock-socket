@@ -31,7 +31,7 @@ import org.hamcrest.Matcher;
  * @author Lukas Krecan
  *
  */
-public class UniversalMockConnectionFactory implements UniversalMockRecorder, RequestRecorder {
+public class UniversalMockConnectionFactory implements UniversalMockRecorder, RequestRecorder, ConnectionFactory {
 	private AbstractMockConnectionFactory wrappedConnection;
 
 	public SequentialMockRecorder andReturn(SocketData data) {
@@ -56,8 +56,8 @@ public class UniversalMockConnectionFactory implements UniversalMockRecorder, Re
 		return new MatcherBasedMockConnectionFactory();
 	}
 
-	public Connection create(String address) {
-		return wrappedConnection.create(address);
+	public Connection createConnection(String address) {
+		return wrappedConnection.createConnection(address);
 	}
 
 	public List<RequestSocketData> requestData() {

@@ -15,6 +15,11 @@
  */
 package net.javacrumbs.mocksocket.connection;
 
+/**
+ * Creates mock socket connection.
+ * @author Lukas Krecan
+ *
+ */
 public interface ConnectionFactory {
 
 	Connection createConnection(String address);

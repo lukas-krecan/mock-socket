@@ -28,12 +28,12 @@ import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
  * @author Lukas Krecan
  *
  */
-public abstract class AbstractMockConnectionFactory implements RequestRecorder {
+public abstract class AbstractMockConnectionFactory implements RequestRecorder, ConnectionFactory {
 
 	private final List<OutputSocketData> requestData = new ArrayList<OutputSocketData>();
 	protected int actualConnection = -1;
 	
-	public synchronized Connection create(String address) {
+	public synchronized Connection createConnection(String address) {
 		actualConnection++;
 		requestData.add(createRequestSocket(address));
 		

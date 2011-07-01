@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.io.InputStream;
 
+import net.javacrumbs.mocksocket.connection.ConnectionFactory;
 import net.javacrumbs.mocksocket.connection.RequestRecorder;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
@@ -65,7 +66,7 @@ public class MockSocket {
 	 * @return
 	 */
 	public synchronized static RequestRecorder getConnection() {
-		return StaticConnectionFactory.getConnection();
+		return StaticConnectionFactory.getRequestRecorder();
 	}
 
 	/**
@@ -113,5 +114,13 @@ public class MockSocket {
 	public static Matcher<RequestSocketData> address(Matcher<String> addressMatcher)
 	{
 		return new CombinableMatcher<RequestSocketData>(new AddressMatcher(addressMatcher));
+	}
+	
+	/**
+	 * Sets custom connection factory.
+	 * @param connectionFactory
+	 */
+	public static void useConnectionFactory(ConnectionFactory connectionFactory) {
+		StaticConnectionFactory.useConnectionFactory(connectionFactory);
 	}
 }

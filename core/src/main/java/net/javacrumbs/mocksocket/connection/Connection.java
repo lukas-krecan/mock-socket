@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Mock socket connection.
+ * @author Lukas Krecan
+ *
+ */
 public interface Connection {
 
 	InputStream getInputStream() throws IOException;

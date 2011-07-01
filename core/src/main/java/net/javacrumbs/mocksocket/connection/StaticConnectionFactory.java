@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketImplFactory;
 
+import net.javacrumbs.mocksocket.MockSocketException;
 import net.javacrumbs.mocksocket.socket.MockSocketImplFactory;
 
 
@@ -29,7 +30,7 @@ import net.javacrumbs.mocksocket.socket.MockSocketImplFactory;
  * @see Socket#setSocketImplFactory(SocketImplFactory)
  */
 public class StaticConnectionFactory implements ConnectionFactory {
-	private static UniversalMockConnectionFactory expectedConnection;
+	private static ConnectionFactory connectionFactory;
 
 	static 
 	{
@@ -46,19 +47,18 @@ public class StaticConnectionFactory implements ConnectionFactory {
 	}
 	
 	public synchronized Connection createConnection(String address) {
-		UniversalMockConnectionFactory connectionFactory = expectedConnection;
 		if (connectionFactory==null)
 		{
-			throw new IllegalStateException("Connection not expected. You have to call expectCall() first.");
+			throw new IllegalStateException("Connection not expected. You have to call expectCall() or useConnectionFactory() first.");
 		}
-		return connectionFactory.create(address);
+		return connectionFactory.createConnection(address);
 	}
 	
 	public synchronized static UniversalMockRecorder expectCall() {
-		if (getConnection()==null)
+		if (getConnectionFactory()==null)
 		{
 			UniversalMockConnectionFactory mockConnection = new UniversalMockConnectionFactory();
-			setExpectedConnection(mockConnection);
+			useConnectionFactory(mockConnection);
 			return mockConnection;
 		}
 		else
@@ -69,15 +69,29 @@ public class StaticConnectionFactory implements ConnectionFactory {
 	
 	public synchronized static void reset()
 	{
-		expectedConnection = null;
+		connectionFactory = null;
 	}
 
 
-	protected static void setExpectedConnection(UniversalMockConnectionFactory mockConnection) {
-		expectedConnection = mockConnection;
+	public static void useConnectionFactory(ConnectionFactory connectionFactory) {
+		StaticConnectionFactory.connectionFactory = connectionFactory;
 	}
 	
-	public synchronized static RequestRecorder getConnection() {
-		return expectedConnection;
+	protected synchronized static ConnectionFactory getConnectionFactory() {
+		return connectionFactory;
+	}
+	public synchronized static RequestRecorder getRequestRecorder() {
+		if (connectionFactory instanceof RequestRecorder)
+		{
+			return (RequestRecorder)connectionFactory;
+		}
+		else if (connectionFactory!=null)
+		{
+			throw new MockSocketException("Connection factory "+connectionFactory.getClass()+" is not instance of "+RequestRecorder.class);
+		}
+		else
+		{
+			throw new IllegalStateException("Connection factory is not set.");
+		}
 	}
 }
