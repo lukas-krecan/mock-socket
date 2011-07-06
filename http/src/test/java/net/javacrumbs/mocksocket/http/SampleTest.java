@@ -30,7 +30,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import net.javacrumbs.mocksocket.MockSocketException;
-import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -47,7 +46,7 @@ public class SampleTest {
 	@After
 	public void reset()
 	{
-		StaticConnectionFactory.reset();
+		HttpMockSocket.reset();
 	}
 
 	@Test
@@ -105,8 +104,8 @@ public class SampleTest {
 	@Test
 	public void testHttpClientSequential() throws ClientProtocolException, IOException {
 		expectCall()
-		.andReturn("HTTP/1.0 200 OK\n\nTest")
-		.andReturn("HTTP/1.0 404 Not Found\n");
+		.andReturn(response().withContent("Test"))
+		.andReturn(response().withStatus(404));
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		
