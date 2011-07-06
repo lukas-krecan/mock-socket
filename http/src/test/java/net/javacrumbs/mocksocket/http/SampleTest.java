@@ -16,7 +16,7 @@
 package net.javacrumbs.mocksocket.http;
 
 import static net.javacrumbs.mocksocket.MockSocket.address;
-import static net.javacrumbs.mocksocket.MockSocket.getConnection;
+import static net.javacrumbs.mocksocket.MockSocket.recordedConnections;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.expectCall;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.header;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.method;
@@ -63,8 +63,8 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
-		assertThat(getConnection().requestData().get(0), method(is("GET")));
+		assertThat(recordedConnections(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(recordedConnections().get(0), method(is("GET")));
 		assertThat(request(0).getMethod(), is("GET"));
 		assertThat(request(0).getAddress(), is("localhost:80"));
 						
@@ -89,8 +89,8 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
-		assertThat(getConnection().requestData().get(0), method(is("GET")));
+		assertThat(recordedConnections(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(recordedConnections().get(0), method(is("GET")));
 		assertThat(request(0).getMethod(), is("GET"));
 		assertThat(request(0).getAddress(), is("localhost:80"));
 		
@@ -115,7 +115,7 @@ public class SampleTest {
 		HttpResponse getResponse = httpclient.execute(httpget);
 		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
 		
-		assertThat(getConnection().requestData(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(recordedConnections(), hasItem(header("Accept", is("text/plain"))));
 		httpget.abort();
 		
 		HttpPost httppost = new HttpPost(ADDRESS);

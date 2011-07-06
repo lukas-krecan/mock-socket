@@ -40,7 +40,7 @@ public class HttpMockSocket extends MockSocket{
 	
 	public static HttpRequest request(int index)
 	{
-		return new HttpParser(getConnection().requestData().get(index));
+		return new HttpParser(recordedConnections().get(index));
 	}
 	
 	public static UniversalHttpMockRecorder expectCall() {

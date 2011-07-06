@@ -46,7 +46,7 @@ public abstract class AbstractMockConnectionFactory implements RequestRecorder, 
 
 	protected abstract InputStream createInputStream();
 
-	protected OutputSocketData getRequestSocketData() {
+	protected synchronized OutputSocketData getRequestSocketData() {
 		return requestData.get(actualConnection);
 	}
 	

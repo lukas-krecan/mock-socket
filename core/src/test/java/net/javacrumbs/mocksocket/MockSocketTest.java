@@ -15,8 +15,8 @@
  */
 package net.javacrumbs.mocksocket;
 
-import static net.javacrumbs.mocksocket.connection.StaticConnectionFactory.expectCall;
 import static org.junit.Assert.assertEquals;
+import static net.javacrumbs.mocksocket.MockSocket.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

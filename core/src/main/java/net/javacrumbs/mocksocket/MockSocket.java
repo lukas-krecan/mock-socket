@@ -19,11 +19,12 @@ package net.javacrumbs.mocksocket;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.io.InputStream;
+import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.ConnectionFactory;
-import net.javacrumbs.mocksocket.connection.RequestRecorder;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
 import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
+import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 import net.javacrumbs.mocksocket.matchers.AddressMatcher;
@@ -49,7 +50,7 @@ public class MockSocket {
 	 * Prepares mock socket to be trained.
 	 * @return
 	 */
-	public synchronized static UniversalMockRecorder expectCall() {
+	public static UniversalMockRecorder expectCall() {
 		return StaticConnectionFactory.expectCall();
 	}
 	
@@ -62,11 +63,23 @@ public class MockSocket {
 	}
 	
 	/**
-	 * Returns {@link RequestRecorder}.
+	 * Returns request data.
 	 * @return
 	 */
-	public synchronized static RequestRecorder getConnection() {
-		return StaticConnectionFactory.getRequestRecorder();
+	public static List<RequestSocketData> recordedConnections()
+	{
+		return StaticConnectionFactory.getRequestRecorder().requestData();
+	}
+	
+	
+	
+	/**
+	 * Empty response.
+	 * @return
+	 */
+	public static SocketData emptyResponse()
+	{
+		return new DefaultSocketData(new byte[0]);
 	}
 
 	/**
@@ -107,7 +120,7 @@ public class MockSocket {
 	}
 	
 	/**
-	 * Matcher thac can compare address.
+	 * Matcher that can compare address.
 	 * @param addressMatcher
 	 * @return
 	 */
