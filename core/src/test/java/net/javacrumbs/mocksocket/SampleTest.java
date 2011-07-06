@@ -16,17 +16,18 @@
 
 package net.javacrumbs.mocksocket;
 
+import static net.javacrumbs.mocksocket.MockSocket.address;
+import static net.javacrumbs.mocksocket.MockSocket.data;
 import static net.javacrumbs.mocksocket.MockSocket.emptyResponse;
 import static net.javacrumbs.mocksocket.MockSocket.expectCall;
-import static net.javacrumbs.mocksocket.MockSocket.*;
+import static net.javacrumbs.mocksocket.MockSocket.recordedConnections;
+import static net.javacrumbs.mocksocket.MockSocket.reset;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.net.Socket;
 
 import javax.net.SocketFactory;
-
-import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -38,14 +39,58 @@ public class SampleTest {
 	public void testResponse() throws Exception
 	{
 		byte[] mockData = new byte[]{1,2,3,4};
-		DefaultSocketData mockResponse = new DefaultSocketData(mockData);
-		expectCall().andReturn(mockResponse);
+		expectCall().andReturn(data(mockData));
 		
 		Socket socket = SocketFactory.getDefault().createSocket("example.org", 1234);
 		byte[] data = IOUtils.toByteArray(socket.getInputStream());
 		socket.close();
 		assertThat(data, is(mockData));
 	}
+	
+	@Test
+	public void testMultiple() throws Exception
+	{
+		byte[] mockData1 = new byte[]{1,2,3,4};
+		byte[] mockData2 = new byte[]{1,2,3,4};
+		expectCall().andReturn(data(mockData1)).andReturn(data(mockData2));
+		
+		Socket socket1 = SocketFactory.getDefault().createSocket("example.org", 1234);
+		byte[] data1 = IOUtils.toByteArray(socket1.getInputStream());
+		socket1.close();
+		assertThat(data1, is(mockData1));
+
+		Socket socket2 = SocketFactory.getDefault().createSocket("example.org", 1234);
+		byte[] data2 = IOUtils.toByteArray(socket2.getInputStream());
+		socket2.close();
+		assertThat(data2, is(mockData2));
+	}
+	
+	@Test
+	public void testConditionalAddress() throws Exception
+	{
+		byte[] mockData = new byte[]{1,2,3,4};
+		expectCall().andWhenRequest(address(is("example.org:1234"))).thenReturn(data(mockData));
+		
+		Socket socket = SocketFactory.getDefault().createSocket("example.org", 1234);
+		byte[] data = IOUtils.toByteArray(socket.getInputStream());
+		socket.close();
+		assertThat(data, is(mockData));
+	}
+	
+	@Test
+	public void testConditionalData() throws Exception
+	{
+		byte[] dataToWrite = new byte[]{5,4,3,2};
+		byte[] mockData = new byte[]{1,2,3,4};
+		expectCall().andWhenRequest(data(is(dataToWrite))).thenReturn(data(mockData));
+		
+		Socket socket = SocketFactory.getDefault().createSocket("example.org", 1234);
+		IOUtils.write(dataToWrite, socket.getOutputStream());
+		byte[] data = IOUtils.toByteArray(socket.getInputStream());
+		socket.close();
+		assertThat(data, is(mockData));
+	}
+	
 	@Test
 	public void testRequest() throws Exception
 	{
@@ -58,6 +103,7 @@ public class SampleTest {
 		assertThat(recordedConnections().get(0), data(is(dataToWrite)));
 		assertThat(recordedConnections().get(0), address(is("example.org:1234")));
 	}
+
 	
 	@After
 	public void tearDown()

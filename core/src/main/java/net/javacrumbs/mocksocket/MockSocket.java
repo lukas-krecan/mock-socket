@@ -81,18 +81,48 @@ public class MockSocket {
 	{
 		return new DefaultSocketData(new byte[0]);
 	}
+	
+	/**
+	 * Response with given data.
+	 * @return
+	 */
+	public static SocketData data(byte[] data)
+	{
+		return new DefaultSocketData(data);
+	}
 
 	/**
-	 * Matcher that can compare data.
+	 * Matcher that can compare data. To be used in {@link UniversalMockRecorder#andWhenRequest} method.
+	 * @param dataMatcher
+	 * @return
+	 */
+	public static Matcher<RequestSocketData> data(Matcher<byte[]> dataMatcher)
+	{
+		return new CombinableMatcher<RequestSocketData>(new DataMatcher(dataMatcher));
+	}
+
+	/**
+	 * Matcher that can compare data. To be used in {@link UniversalMockRecorder#andWhenRequest} method.
 	 * @param dataMatcher
 	 * @return
 	 */
 	public static Matcher<RequestSocketData> withData(InputStream data)
 	{
-		return new CombinableMatcher<RequestSocketData>(new DataMatcher(is(Utils.toByteArray(data))));
+		return data(is(Utils.toByteArray(data)));
 	}
+		
 	/**
-	 * Matcher that can compare data.
+	 * Matcher that can compare address. To be used in {@link UniversalMockRecorder#andWhenRequest} method.
+	 * @param addressMatcher
+	 * @return
+	 */
+	public static Matcher<RequestSocketData> address(Matcher<String> addressMatcher)
+	{
+		return new CombinableMatcher<RequestSocketData>(new AddressMatcher(addressMatcher));
+	}
+	
+	/**
+	 * Matcher that can compare data. To be used in request assertions.
 	 * @param dataMatcher
 	 * @return
 	 */
@@ -101,7 +131,7 @@ public class MockSocket {
 		return new CombinableMatcher<SocketData>(new DataMatcher(is(Utils.toByteArray(data))));
 	}
 	/**
-	 * Matcher that can compare data.
+	 * Matcher that can compare data. To be used in request assertions.
 	 * @param dataMatcher
 	 * @return
 	 */
@@ -109,25 +139,7 @@ public class MockSocket {
 	{
 		return dataAre(data.getData());
 	}
-	/**
-	 * Matcher that can compare data.
-	 * @param dataMatcher
-	 * @return
-	 */
-	public static Matcher<RequestSocketData> data(Matcher<byte[]> dataMatcher)
-	{
-		return new CombinableMatcher<RequestSocketData>(new DataMatcher(dataMatcher));
-	}
-	
-	/**
-	 * Matcher that can compare address.
-	 * @param addressMatcher
-	 * @return
-	 */
-	public static Matcher<RequestSocketData> address(Matcher<String> addressMatcher)
-	{
-		return new CombinableMatcher<RequestSocketData>(new AddressMatcher(addressMatcher));
-	}
+
 	
 	/**
 	 * Sets custom connection factory.
