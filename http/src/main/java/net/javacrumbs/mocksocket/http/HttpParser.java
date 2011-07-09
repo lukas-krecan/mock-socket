@@ -21,8 +21,8 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import net.javacrumbs.mocksocket.connection.data.OutputSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
-import net.javacrumbs.mocksocket.http.connection.HttpOutputData;
 import net.javacrumbs.mocksocket.util.Utils;
 
 import org.eclipse.jetty.http.HttpHeaders;
@@ -115,9 +115,9 @@ public class HttpParser implements HttpRequest  {
 	 * Returns address to which the request was sent to or null.
 	 */
 	public String getAddress() {
-		if (socketData instanceof HttpOutputData)
+		if (socketData instanceof OutputSocketData)
 		{
-			return ((HttpOutputData) socketData).getAddress();
+			return ((OutputSocketData) socketData).getAddress();
 		}
 		else
 		{

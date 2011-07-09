@@ -23,6 +23,7 @@ import java.util.List;
 
 import net.javacrumbs.mocksocket.connection.ConnectionFactory;
 import net.javacrumbs.mocksocket.connection.StaticConnectionFactory;
+import net.javacrumbs.mocksocket.connection.StringUtils;
 import net.javacrumbs.mocksocket.connection.UniversalMockRecorder;
 import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
@@ -147,5 +148,29 @@ public class MockSocket {
 	 */
 	public static void useConnectionFactory(ConnectionFactory connectionFactory) {
 		StaticConnectionFactory.useConnectionFactory(connectionFactory);
+	}
+	
+	public static boolean isPrintDataAsString() {
+		return StringUtils.isPrintDataAsString();
+	}
+
+	/**
+	 * Should be data printed as string or as byte array.
+	 * @param printDataAsString
+	 */
+	public static void setPrintDataAsString(boolean printDataAsString) {
+		StringUtils.setPrintDataAsString(printDataAsString);
+	}
+
+	public static String getDefaultEncoding() {
+		return StringUtils.getDefaultEncoding();
+	}
+
+	/**
+	 * Default encoding for byte[] -> String conversion.
+	 * @param defaultEncoding
+	 */
+	public static void setDefaultEncoding(String defaultEncoding) {
+		StringUtils.setDefaultEncoding(defaultEncoding);
 	}
 }

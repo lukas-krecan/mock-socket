@@ -109,7 +109,7 @@ public class SampleTest {
 	}
 	
 	@Test(expected=MockSocketException.class)
-	public void testSequential() throws ClientProtocolException, IOException {
+	public void testSequentialError() throws ClientProtocolException, IOException {
 		expectCall().andReturn(response().withStatus(200).withContent("Text"));
 		
 		HttpClient httpclient = new DefaultHttpClient();

@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import net.javacrumbs.mocksocket.MockSocket;
+import net.javacrumbs.mocksocket.connection.StringUtils;
+
 public class OutputSocketData implements RequestSocketData {
 	
 	private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -51,7 +54,7 @@ public class OutputSocketData implements RequestSocketData {
 	
 	@Override
 	public String toString() {
-		return Arrays.toString(outputStream.toByteArray());
+		return StringUtils.convertDataToString(getDataAsBytes());
 	}
 
 }

@@ -18,7 +18,8 @@ package net.javacrumbs.mocksocket.connection.data;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
+
+import net.javacrumbs.mocksocket.connection.StringUtils;
 
 /**
  * Wraps socket data.
@@ -41,6 +42,6 @@ public class DefaultSocketData implements SocketData
 
 	@Override
 	public String toString() {
-		return Arrays.toString(data);
+		return StringUtils.convertDataToString(data);
 	}
 }

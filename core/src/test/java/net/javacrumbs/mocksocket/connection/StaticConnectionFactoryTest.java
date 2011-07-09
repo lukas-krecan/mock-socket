@@ -30,12 +30,14 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
+import net.javacrumbs.mocksocket.MockSocket;
 import net.javacrumbs.mocksocket.MockSocketException;
 import net.javacrumbs.mocksocket.connection.data.DefaultSocketData;
 import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 
@@ -49,10 +51,17 @@ public class StaticConnectionFactoryTest {
 	private static final SocketData DATA4 = new DefaultSocketData(new byte[]{4,4,4,4});
 	private StaticConnectionFactory connectionFactory  = new StaticConnectionFactory();
 
+	@Before
+	public void printAsBytes()
+	{
+		MockSocket.setPrintDataAsString(false);
+	}
+	
 	@After
 	public void resetConnection()
 	{
 		StaticConnectionFactory.reset();
+		MockSocket.setPrintDataAsString(true);
 	}
 	
 	@Test
