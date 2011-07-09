@@ -32,7 +32,7 @@ public class DefaultSocketData implements SocketData
 	
 
 	public DefaultSocketData(byte[] data) {
-		this.data = data;
+		this.data = data.clone();
 	}
 
 	public InputStream getData() {

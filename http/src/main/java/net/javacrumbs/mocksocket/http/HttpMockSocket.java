@@ -23,6 +23,7 @@ import net.javacrumbs.mocksocket.http.matchers.ContentMatcher;
 import net.javacrumbs.mocksocket.http.matchers.HeaderMatcher;
 import net.javacrumbs.mocksocket.http.matchers.MethodMatcher;
 import net.javacrumbs.mocksocket.http.matchers.StatusMatcher;
+import net.javacrumbs.mocksocket.http.matchers.UriMatcher;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.core.CombinableMatcher;
@@ -61,6 +62,10 @@ public class HttpMockSocket extends MockSocket{
 
 	public static CombinableMatcher<RequestSocketData> method(Matcher<String> methodMatcher) {
 		return new CombinableMatcher<RequestSocketData>(new MethodMatcher(methodMatcher));
+	}
+	
+	public static CombinableMatcher<RequestSocketData> uri(Matcher<String> uriMatcher) {
+		return new CombinableMatcher<RequestSocketData>(new UriMatcher(uriMatcher));
 	}
 
 

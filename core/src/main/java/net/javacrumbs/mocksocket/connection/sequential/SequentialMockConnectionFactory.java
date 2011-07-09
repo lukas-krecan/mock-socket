@@ -40,7 +40,8 @@ public class SequentialMockConnectionFactory extends AbstractMockConnectionFacto
 	}
 	
 	protected InputStream createInputStream() {
-		if (responseData.size()>actualConnection)
+		int actualConnection = getActualConnection();
+		if (responseData.size()>actualConnection )
 		{
 			return responseData.get(actualConnection).getData();
 		}

@@ -22,6 +22,7 @@ import static net.javacrumbs.mocksocket.http.HttpMockSocket.header;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.method;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.request;
 import static net.javacrumbs.mocksocket.http.HttpMockSocket.response;
+import static net.javacrumbs.mocksocket.http.HttpMockSocket.uri;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -50,7 +51,7 @@ public class SampleTest {
 	}
 
 	@Test
-	public void testHttpClient() throws ClientProtocolException, IOException {
+	public void testHttpClientMethod() throws ClientProtocolException, IOException {
 		expectCall()
 			.andWhenRequest(method(is("POST")).and(address(is("localhost:80")))).thenReturn(response().withStatus(404))
 			.andWhenRequest(method(is("GET"))).thenReturn(response().withStatus(200).withContent("Text"));
@@ -77,6 +78,36 @@ public class SampleTest {
 		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));
 		httppost.abort();
 	}
+	
+	@Test
+	public void testHttpClientUri() throws ClientProtocolException, IOException {
+		expectCall()
+			.andWhenRequest(uri(is("/test/something.do"))).thenReturn(response().withStatus(404))
+			.andWhenRequest(uri(is("/test/other.do"))).thenReturn(response().withStatus(200).withContent("Text"));
+		
+		HttpClient httpclient = new DefaultHttpClient();
+		
+		HttpGet httpget = new HttpGet(ADDRESS+"test/other.do");
+		httpget.addHeader("Accept","text/plain");
+		HttpResponse getResponse = httpclient.execute(httpget);
+		assertThat(getResponse.getStatusLine().getStatusCode(), is(200));
+		
+		assertThat(recordedConnections(), hasItem(header("Accept", is("text/plain"))));
+		assertThat(recordedConnections().get(0), method(is("GET")));
+		assertThat(request(0).getMethod(), is("GET"));
+		assertThat(request(0).getAddress(), is("localhost:80"));
+						
+		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+		getResponse.getEntity().writeTo(outstream);
+		assertThat(new String(outstream.toByteArray()), is("Text"));
+		httpget.abort();
+
+		HttpPost httppost = new HttpPost(ADDRESS+"test/something.do");
+		HttpResponse postResponse = httpclient.execute(httppost);
+		assertThat(postResponse.getStatusLine().getStatusCode(), is(404));
+		httppost.abort();
+	}
+	
 	@Test(expected=MockSocketException.class)
 	public void testSequential() throws ClientProtocolException, IOException {
 		expectCall().andReturn(response().withStatus(200).withContent("Text"));

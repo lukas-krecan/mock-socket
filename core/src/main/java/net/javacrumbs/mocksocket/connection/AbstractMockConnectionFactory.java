@@ -31,7 +31,7 @@ import net.javacrumbs.mocksocket.connection.data.RequestSocketData;
 public abstract class AbstractMockConnectionFactory implements RequestRecorder, ConnectionFactory {
 
 	private final List<OutputSocketData> requestData = new ArrayList<OutputSocketData>();
-	protected int actualConnection = -1;
+	private int actualConnection = -1;
 	
 	public synchronized Connection createConnection(String address) {
 		actualConnection++;
@@ -52,5 +52,9 @@ public abstract class AbstractMockConnectionFactory implements RequestRecorder, 
 	
 	public synchronized List<RequestSocketData> requestData() {
 		return new ArrayList<RequestSocketData>(requestData);
+	}
+
+	protected synchronized int getActualConnection() {
+		return actualConnection;
 	}
 }
