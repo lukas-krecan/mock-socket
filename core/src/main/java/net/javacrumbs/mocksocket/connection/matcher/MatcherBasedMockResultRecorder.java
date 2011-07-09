@@ -19,6 +19,10 @@ import net.javacrumbs.mocksocket.connection.data.SocketData;
 
 public interface MatcherBasedMockResultRecorder {
 
+	/**
+	 * When the condition is met, return this data.
+	 * @param data
+	 * @return
+	 */
 	MatcherBasedMockRecorder thenReturn(SocketData data);
-
 }

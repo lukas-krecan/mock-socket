@@ -20,9 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
-import net.javacrumbs.mocksocket.MockSocket;
 import net.javacrumbs.mocksocket.connection.StringUtils;
 
 public class OutputSocketData implements RequestSocketData {
