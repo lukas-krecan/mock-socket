@@ -144,9 +144,9 @@
 	</reporting>
 
 	<scm>
-   	  <connection>scm:git:git@github.com:dart0/mock-socket.git</connection>
-	  <developerConnection>scm:git:git@github.com:dart0/mock-socket.git</developerConnection>
-          <url>scm:git:git@github.com:dart0/mock-socket.git</url>
+   	  <connection>scm:git:git@github.com:lukas-krecan/mock-socket.git</connection>
+	  <developerConnection>scm:git:git@github.com:lukas-krecan/mock-socket.git</developerConnection>
+          <url>scm:git:git@github.com:lukas-krecan/mock-socket.git</url>
 	</scm>
 
 	<distributionManagement>
