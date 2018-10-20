@@ -25,7 +25,7 @@ import java.net.SocketImpl;
 public abstract class AbstractMockSocketImpl extends SocketImpl {
 	
 	/**
-	 * Onvoked on a connect method call.
+	 * Invoked on a connect method call.
 	 * @param address host:port
 	 */
 	protected abstract void onConnect(String address);

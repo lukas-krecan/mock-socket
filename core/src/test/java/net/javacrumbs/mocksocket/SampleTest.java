@@ -94,12 +94,16 @@ public class SampleTest {
 	@Test
 	public void testRequest() throws Exception
 	{
+		//prepare mock
 		byte[] dataToWrite = new byte[]{5,4,3,2};
 		expectCall().andReturn(emptyResponse());
 		
+		//do test
 		Socket socket = SocketFactory.getDefault().createSocket("example.org", 1234);
 		IOUtils.write(dataToWrite, socket.getOutputStream());
 		socket.close();
+		
+		//verify data sent
 		assertThat(recordedConnections().get(0), data(is(dataToWrite)));
 		assertThat(recordedConnections().get(0), address(is("example.org:1234")));
 	}
